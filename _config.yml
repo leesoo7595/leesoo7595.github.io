@@ -4,10 +4,10 @@
 # ---------------------------------------------------------------
 
 # Site
-title: NexT
+title: Zoe's blog
 subtitle:
-description:
-author: John Doe
+description: Junior Backend Developer
+author: ZOE
 # Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hans, zh-hk, zh-tw
 language: en
 date_format: '%Y-%m-%d'
@@ -89,7 +89,7 @@ rss:
 #since: 2015
 
 # icon between year and author @Footer
-authoricon: heart
+authoricon: zoe
 
 # Footer `powered-by` and `theme-info` copyright
 copyright: true
@@ -225,7 +225,7 @@ social_icons:
   enable: true
   # Icon Mappings.
   # KeyMapsToSocialItemKey: NameOfTheIconFromFontAwesome
-  GitHub: github
+  GitHub: yuygh131@gmail.com
   Twitter: twitter
   Weibo: weibo
 
@@ -344,9 +344,8 @@ post_copyright:
 #   enabled: [true/false] - Replace with specific image
 #   image: url-of-image   - Images's url
 custom_logo:
-  enabled: false
+  enabled: true
   image:
-
 
 # Code Highlight theme
 # Available value:
@@ -409,10 +408,10 @@ changyan:
 # Support for gitalk comments system.
 gitalk:
   enable: false
-  clientID: # 54730ddf7b9420460c03
+  clientID: # c05684701b25ff1c19ea0c01ce4d80c125e0707d
   clientSecret: # c05684701b25ff1c19ea0c01ce4d80c125e0707d
-  repo: # colingpt.github.io
-  owner: # colingpt
+  repo: kahee.githhub.io # colingpt.github.io
+  owner: kahee
   admin: # colingpt
 
 # Baidu Share
@@ -461,7 +460,7 @@ duoshuo_info:
 # Facebook SDK Support.
 # https://github.com/iissnan/hexo-theme-next/pull/410
 facebook_sdk:
-  enable: false
+  enable: true
   app_id:       #<app_id>
   fb_admin:     #<user_id>
   like_button:  #true
@@ -471,7 +470,7 @@ facebook_sdk:
 # This plugin depends on Facebook SDK.
 # If facebook_sdk.enable is false, Facebook comments plugin is unavailable.
 facebook_comments_plugin:
-  enable: false
+  enable: true
   num_of_posts: 10  # min posts num is 1
   width: 100%       # default width is 550px
   scheme: light     # default scheme is light (light or dark)

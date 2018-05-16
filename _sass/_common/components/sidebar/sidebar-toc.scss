@@ -20,7 +20,7 @@
   a {
     @include the-transition();
     transition-property: all;
-    color: $toc-link-color;
+    color: #254469;
     border-bottom-color: $toc-link-border-color;
 
     &:hover {
@@ -47,13 +47,13 @@
 }
 
 .post-toc .nav .active > a {
-  color: $toc-link-active-color;
-  border-bottom-color: $toc-link-active-border-color;
+  color: #654c4c;
+  border-bottom-color: #654c4c;
 }
 
 .post-toc .nav .active-current > a {
-  color: $toc-link-active-current-color;
+  color: #654c4c;
   &:hover {
-    color: $toc-link-active-current-border-color;
+    color: #654c4c;
   }
 }
