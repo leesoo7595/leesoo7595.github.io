@@ -4,6 +4,8 @@ title: "Djangogirls_Tutorial(4)"
 date: 2018-01-30 14:00:00
 img: ./post_img/django.png
 tags: [Django]
+categories:
+- TIL
 ---
 
 ### 템플릿 확장하기

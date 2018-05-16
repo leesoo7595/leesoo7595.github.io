@@ -4,7 +4,10 @@ title: "Djangogirls_Tutorial(2)"
 date: 2018-01-30 09:00:00
 img: ./post_img/django.png
 tags: [Django]
+categories:
+- TIL
 ---
+
 >본 문서는 패스트캠퍼스 'Web-Programming School' 수업 자료를 바탕으로 작성되었습니다.
 ><br> [장고걸스](https://tutorial.djangogirls.org/ko/) 페이지를 참고하였습니다.
 ><Br>**Ubuntu 16.04 환경**
@@ -29,7 +32,7 @@ urlpatterns = [
     # "localhost:8000/"
     path('', include('blog.urls')),
 
-    # 장고 2.0 버전 이전  
+    # 장고 2.0 버전 이전
     # url(r'^admin/', admin.site.urls)
     # 장고 2.0 버전
     # path('articles/<int:year>/', views.year_archive)
