@@ -151,16 +151,14 @@ Out[37]: 'Harpo'
 ```
 
 - 값 교환
+
 ```python
 In [38]: password = 'swordfish'
-
 In [39]: icecream = 'tuttifrutti'
 
 In [40]: passwrod, icecream = icecream, password
-
 In [41]: passwrod
 Out[41]: 'tuttifrutti'
-
 In [42]: icecream
 Out[42]: 'swordfish'
 ```
@@ -174,7 +172,7 @@ Out[42]: 'swordfish'
 
 ----
 
-## 딕셔너리
+## 3.4 딕셔너리
 리스트와 다른 점은 항목의 순서를 따르지 않으며, 값에 상응하는 고유 키를 가지고 있다.
 ### 딕셔너리 생성하기 :{}
 ### 딕셔너리로 변환하기 : dict()
