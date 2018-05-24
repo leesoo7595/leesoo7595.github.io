@@ -85,12 +85,6 @@
   <link rel="alternate" href="{{ site_rss | relative_url }}" title="{{ site.title }}" type="application/atom+xml" />
 {% endif %}
 
-
-{% if site.favicon %}
-  <link rel="shortcut icon" type="image/x-icon" href="{{ site.favicon | relative_url }}?v={{ site.version }}" />
-{% endif %}
-
-
 {% if site.facebook_sdk.enable and site.facebook_sdk.webmaster %}
   <meta property="fb:admins" content="{{ site.facebook_sdk.fb_admin }}" />
   <meta property="fb:app_id" content="{{ site.facebook_sdk.app_id }}" />
