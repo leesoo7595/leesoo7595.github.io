@@ -80,3 +80,5 @@ toy_study_room=> alter table members_user drop column img_profile;
 
 ### 변경해야 할것들
 - `local` 환경의 경우 DB를 Django 기본 설정으로 되어있는 sqlite를 사용했다. 이렇게 하는 경우 `dev/production` 환경과 다르기때문에 오류잡기가 어렵다. 그래서 로컬 환경 역시 postgresql로 변경하자
+
+---
