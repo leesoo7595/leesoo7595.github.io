@@ -23,6 +23,9 @@ tags: [Project]
 - 비동기식 처리 장단점 : 설계가 동기식보다 복잡하고 결과가 주어지는데 시간이 걸려도 동시에 다른 작업을 진행할 수 있어서 자원을 효율적으로 사용 할 수 있다.
 <br>
 [출처:공부해서 남 주자](http://private.tistory.com/24)
+
+---
+
 ## Celery 그리고 Redis
 <img src="{{ site.url }}/assets/post_img/django_celery.png">
 [이미지 출처](http://whatisthenext.tistory.com/127)<br>
