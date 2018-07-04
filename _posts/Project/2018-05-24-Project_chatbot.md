@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Project 카카오톡 챗봇(세종대 도서 검색)"
-date: 2018-05-24 00:00:00
+date: 2018-05-23 00:00:00
 img:
 categories:
 - Project
