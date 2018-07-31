@@ -1,12 +1,16 @@
 ---
 layout: post
-title: "Algorithm - 단순 연결 리스트(Singly Linked List)"
+title: "단순 연결 리스트(Singly Linked List)"
 date: 2018-07-30 00:00:00
 img:
 categories:
-- Algorithm
-tags: [알고리즘]
+- Algorithm/DataStructure
+tags: [알고리즘/자료구조]
 ---
+> 파이썬과 함께하는 자료구조의 이해 책 정리
+
+----
+
 ## 연결리스트
 ### 단순연결리스트
 - 동적메모리 할당을 이용해 노드들을 한 방향으로 연결하여 리스트를 구현하는 자료구조
@@ -139,3 +143,39 @@ pear 다음 노드 삭세후:cherry ->apple ->grape
 첫 노드 삭세 후:apple ->grape
 첫 노드로 망고, 딸기 삽입 후:strawberry ->mango ->apple ->grape
 ```
+
+### 문제
+- 2개의 단순연결리스트를 하나의 정렬된 단순연결리스트로 만드는 함수 정의하시오
+
+```python
+def add_list(self, list):
+    p = self.head
+    while p:
+        if p.next == None:
+            p.next = list.head
+            break
+        p = p.next
+```
+
+- 위 문제를 해결하면서 무한루트를 보게 되었다. 대체 왜그런가에 대해 고민하다가.. 기본적인 python 개념을 놓쳤다는것을 알게되었다.
+- [얕은 copy, 깉은 copy 참고 자료](https://wikidocs.net/16038)
+
+```python
+import copy
+s = SList()
+s.insert_front('grape')
+s.insert_front('orange')
+s.insert_front('cherry')
+
+s.print_list()
+# s2 = s
+# 얕은 copy
+# s2 = copy.copy(s)
+# 깊은 copy
+# s2 = copy.deepcopy(s)
+
+s2 = SList()
+s2.insert_front('키위')
+s2.print_list()
+```
+- 만들어진 리스트를 활용하여 또다른 단순연결리스트를 만들었는데 같은 메모리 주소를 바라보기때문에 무한루프에 빠졌던 것, `copy.deepcopy()`를 이용하거나 새로운 `SList` 클래스 인스턴스를 생성해줘야 한다.

@@ -4,8 +4,8 @@ title: "Algorithm - 정렬 "
 date: 2018-07-05 00:00:00
 img:
 categories:
-- Algorithm
-tags: [알고리즘]
+- Algorithm/DataStructure
+tags: [알고리즘/자료구조]
 ---
 
 ## 정렬

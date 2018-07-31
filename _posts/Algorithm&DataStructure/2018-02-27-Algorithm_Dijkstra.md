@@ -3,7 +3,9 @@ layout: post
 title: "알고리즘(다익스트라)"
 date: 2018-02-27  00:00:00
 img:
-tags: [알고리즘]
+categories:
+- Algorithm/DataStructure
+tags: [알고리즘/자료구조]
 ---
 > Hello Coding 그림으로 개념을 이해하는 알고리즘 책 정리
 
@@ -76,12 +78,12 @@ def fine_lowest_cost_node(costs):
           cost = costs[node]
 
         # 처리하지 않은 정점 중, 거리가 짧은 것이 있다면, 새로운 최저 정점으로 설정
-        if cost < lowest_cost and node not in processed:  
+        if cost < lowest_cost and node not in processed:
             lowest_cost = cost
             lowest_cost_node = node
             print(f'low-{lowest_cost_node}/{lowest_cost}')
 
-    return lowest_cost_node    
+    return lowest_cost_node
 
 # 처리하지 않은 가장 싼 정점 찾기
 node = fine_lowest_cost_node(costs)
@@ -102,7 +104,7 @@ while node is not None:
             parents[n]=node
 
     # 정점을 처리한 사실을 기록
-    processed.append(node)  
+    processed.append(node)
     print(f'processed= {processed}')
     # 다음으로 처리할 정점 찾아 반복
     node = fine_lowest_cost_node(costs)
