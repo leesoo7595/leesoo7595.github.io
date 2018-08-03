@@ -3,6 +3,8 @@ layout: post
 title: "Django_Project(blog)"
 date: 2018-04-13 00:00:00
 img:
+categories:
+- Project
 tags: [Django_Project]
 ---
 
@@ -29,7 +31,7 @@ tags: [Django_Project]
 #### select_related
 - [참고 사이트](https://jupiny.com/2016/10/06/select_related-prefetch_related/)
 - Reservation 테이블과 Blog 테이블은 one_to_one 으로 이루어져있다. 자기가 쓴 상품 후기 목록을 가져오기 위해선 Blog - Reservation -(Foreign)- User를 가져와야 했다. 그런데 QuerySet에서 접근하는 부분에서 어려움이 있었다. 그렇게 검색을 통해 알게된 `select_related`
-- `select_related`: 쿼리셋을 가져올 때, releated objects들을 다 불러오는 함수이다. 쿼리가 조금 복잡해지긴 하지만, 데이터를 불러올 cache에 남아 있어서 DB에 다시 접근하는 것을 줄여준다. 그리고 foreign-key, one-to-one 관계에서만 사용가능하다.  
+- `select_related`: 쿼리셋을 가져올 때, releated objects들을 다 불러오는 함수이다. 쿼리가 조금 복잡해지긴 하지만, 데이터를 불러올 cache에 남아 있어서 DB에 다시 접근하는 것을 줄여준다. 그리고 foreign-key, one-to-one 관계에서만 사용가능하다.
 
 ```py
 In [1]: user = User.objects.first()

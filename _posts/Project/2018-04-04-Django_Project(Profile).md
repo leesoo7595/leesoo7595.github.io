@@ -3,6 +3,8 @@ layout: post
 title: "Django_Project(profile)"
 date: 2018-04-04 00:00:00
 img:
+categories:
+- Project
 tags: [Django_Project]
 ---
 

@@ -3,6 +3,8 @@ layout: post
 title: "Django_Project(wish_list)"
 date: 2018-04-10 00:00:00
 img:
+categories:
+- Project
 tags: [Django_Project]
 ---
 
