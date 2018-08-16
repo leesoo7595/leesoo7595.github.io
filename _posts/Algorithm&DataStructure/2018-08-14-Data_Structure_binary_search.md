@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "탐색트리(Binary Search)"
+title: "탐색트리 - 이진탐색(Binary Search)"
 date: 2018-08-14 00:00:00
 img:
 categories:
@@ -21,7 +21,7 @@ tags: [알고리즘/자료구조]
 - **T(N) = T(N/2) + 1** : 1번의 비교 후에 리스트의 1/2, 즉 앞부분이나 뒷부분을 재귀호출
 - **T(N) = T(N/2) + 1 + T(N/2<sup>2</sup>) + 2 + ..... k = T(N/2<sup>k</sup>) + k  = T(1) + k** , N = 2<sup>k</sup>라고 가정하면 **T(N) = 1 + log<sub>2</sub>N = O(logN)**
 - 단점 : 삽입삭제가 빈번하면 정렬을 유지하기 위해 시간이 오래 걸린다. 1회의 삽입 삭제 연산 수행시 최악의 경우 O(N) 시간이 소요된다.
- 
+
 ### 코드
 ```python
 import random
