@@ -4,10 +4,10 @@
 # ---------------------------------------------------------------
 
 # Site
-title: Zoe's blog
+title: Leesoo's blog
 subtitle:
 description: Junior Backend Developer
-author: ZOE
+author: LEESOO
 # Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hans, zh-hk, zh-tw
 language: en
 date_format: '%Y-%m-%d'
@@ -89,7 +89,7 @@ rss:
 #since: 2015
 
 # icon between year and author @Footer
-authoricon: zoe
+authoricon: leesoo
 
 # Footer `powered-by` and `theme-info` copyright
 copyright: true
@@ -213,7 +213,7 @@ font:
 # Key is the link label showing to end users.
 # Value is the target link (E.g. GitHub: https://github.com/iissnan)
 social:
-  GitHub: https://github.com/kahee
+  GitHub: https://github.com/leesoo7595
 
 
 
@@ -411,8 +411,8 @@ gitalk:
   enable: false
   clientID: # c05684701b25ff1c19ea0c01ce4d80c125e0707d
   clientSecret: # c05684701b25ff1c19ea0c01ce4d80c125e0707d
-  repo: kahee.githhub.io # colingpt.github.io
-  owner: kahee
+  repo: leesoo7595.githhub.io # colingpt.github.io
+  owner: leesoo7595
   admin: # colingpt
 
 # Baidu Share
