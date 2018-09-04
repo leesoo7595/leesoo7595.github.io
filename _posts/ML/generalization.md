@@ -1,3 +1,10 @@
+---
+layout: post
+title: "[ML] Generalization"
+img:
+tags: [ML]
+---
+
 # Generalization : peril-of-overfitting
 ## 일반화 : 과적합의 위험
 

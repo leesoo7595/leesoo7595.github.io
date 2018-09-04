@@ -1,3 +1,10 @@
+---
+layout: post
+title: "[ML] First Steps about Tensorflow"
+img:
+tags: [ML]
+---
+
 참고 : https://developers.google.com/machine-learning/crash-course/first-steps-with-tensorflow/toolkit
 
 # 텐서플로우 첫걸음 : 도구

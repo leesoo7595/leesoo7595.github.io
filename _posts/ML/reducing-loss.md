@@ -1,3 +1,10 @@
+---
+layout: post
+title: "[ML] Reducing Loss"
+img:
+tags: [ML]
+---
+
 참고 :
 - https://developers.google.com/machine-learning/crash-course/reducing-loss/an-iterative-approach
 - https://developers.google.com/machine-learning/crash-course/reducing-loss/gradient-descent
