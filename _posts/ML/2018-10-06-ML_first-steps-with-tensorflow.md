@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "[ML] First Steps about Tensorflow"
-img:
+date: 2018-10-06
 tags: [ML]
+comments: true
 ---
 
 참고 : https://developers.google.com/machine-learning/crash-course/first-steps-with-tensorflow/toolkit

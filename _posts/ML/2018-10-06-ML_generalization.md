@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "[ML] Generalization"
-img:
+date: 2018-10-06
 tags: [ML]
+comments: true
 ---
 
 # Generalization : peril-of-overfitting

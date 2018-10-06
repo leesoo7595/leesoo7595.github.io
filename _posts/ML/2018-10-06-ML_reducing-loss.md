@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "[ML] Reducing Loss"
-img:
+date: 2018-10-06
 tags: [ML]
+comments: true
 ---
 
 참고 :
