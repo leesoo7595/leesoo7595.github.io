@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Spring Boot : ConfigurableWebBindingInitializer 사용하여 컨버터하기"
-date: 2018-10-19
+date: 2018-10-21
 tags: [Spring Boot]
 comments: true
 ---
