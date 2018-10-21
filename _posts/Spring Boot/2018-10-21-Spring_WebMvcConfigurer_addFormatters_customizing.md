@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Spring Boot : WebMvcConfigurer 사용하여 컨버터하기"
+title: "Spring Boot : WebMvcConfigurer 사용하여 컨버터하기 (2)"
 date: 2018-10-21
 tags: [Spring Boot]
 comments: true
