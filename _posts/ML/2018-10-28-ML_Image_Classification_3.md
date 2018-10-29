@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "[ML] Image Classification (2)"
-date: 2018-10-25
+title: "[ML] Image Classification (3)"
+date: 2018-10-28
 tags: [ML]
 comments: true
 ---
