@@ -2,7 +2,7 @@
 layout: post
 title: "[Quiz] Template Literals"
 date: 2019-01-01
-tags: [JavaScript]
+tags: [Quiz]
 comments: true
 ---
 
