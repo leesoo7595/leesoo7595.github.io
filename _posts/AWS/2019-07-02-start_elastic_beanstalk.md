@@ -1,6 +1,6 @@
 ---
 layout: post
-title: [AWS] EB를 공부해보자
+title: "[AWS] EB를 공부해보자"
 date: 2019-07-02
 tags: [AWS]
 comments: true
