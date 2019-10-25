@@ -165,6 +165,8 @@ symbol은 ES6에서 새롭게 추가된 데이터 타입으로 변경 불가능�
 **새롭게 알게된 사실**
 `let, const`가 호이스팅이 되지 않는 것이 절대 아니다. let, const도 호이스팅이 된다. 다만, 선언문에 도달할 때까지 엑세스하지 못할 뿐이다!!!!!
 
+호이스팅 참고: https://medium.com/korbit-engineering/let%EA%B3%BC-const%EB%8A%94-%ED%98%B8%EC%9D%B4%EC%8A%A4%ED%8C%85-%EB%90%A0%EA%B9%8C-72fcf2fac365
+
 * 선언 단계
 변수 객체에 변수를 등록한다. 이 변수 객체가 스코프가 참조하는 대상이 된다.
 
