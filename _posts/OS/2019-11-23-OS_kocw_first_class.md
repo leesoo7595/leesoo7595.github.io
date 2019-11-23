@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "[OS] Hardware"
+title: "[OS] What is Operating System?"
 date: 2019-11-23
 tags: [OS]
 comments: true
