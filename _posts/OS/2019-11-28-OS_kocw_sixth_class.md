@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "[OS] 운영체제 서비스"
-date: 2019-11-27
+title: "[OS] Process Management"
+date: 2019-11-28
 tags: [OS]
 comments: true
 ---
