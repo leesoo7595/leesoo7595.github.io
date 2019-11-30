@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "[JavaScript] function"
-date: 2019-11-28
+title: "[JavaScript] prototype"
+date: 2019-11-30
 tags: [JavaScript]
 comments: true
 ---
