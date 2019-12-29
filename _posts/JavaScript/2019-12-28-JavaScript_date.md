@@ -159,7 +159,7 @@ ny.date(15).format();     // 2017-03-15T21:30:00-04:00
 
 #### 참고 자료
 
-- [https://meetup.toast.com/posts/125]
-- [https://meetup.toast.com/posts/130]
-- [https://ko.wikipedia.org/wiki/ISO_8601]
-- [https://jsonobject.tistory.com/403]
+- [자바스크립트에서 타임존 다루기 (1)]: https://meetup.toast.com/posts/125
+- [자바스크립트에서 타임존 다루기 (2)]: https://meetup.toast.com/posts/130
+- [ISO 8601 - 위키백과, 우리 모두의 백과사전]: https://ko.wikipedia.org/wiki/ISO_8601
+- [Java 8, 타임존이 포함된 ISO 8601 문자열을 LocalDateTime으로 변환하기]: https://jsonobject.tistory.com/403
