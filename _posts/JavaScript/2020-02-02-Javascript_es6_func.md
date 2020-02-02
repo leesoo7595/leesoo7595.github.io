@@ -22,7 +22,7 @@ Javascript의 객체를 다시 공부해보기로 했다. 객체를 공부하는
 
 function은 공통적으로 `[[constructor]]`라는 내부 메소드를 가지고 있다. 또한 `[[constructor]]`를 가지고 있는 객체는 `[[call]]`이라는 내부 메소드 또한 가지고 있는데, 이는 즉, 모든 constructor가 있는 객체는 함수라는 뜻이다.
 
-**다시 말하면, 함수만이 constructor라는 메소드를 가지고 있다.**
+**다시 말하면, constructor를 내부적으로 가지고 있는 아이는 모두 함수이다. 그 반대는 아님..**
 
 또한 해당 function 안에 있는 constructor로 객체(인스턴스)를 생성하는데, 해당 객체는 속성 참조를 확인하기 위해 암시적으로 function constructor의 prototype 프로퍼티를 참조한다. constructor의 prototype 프로퍼티란, 간단하게 `Function.constructor.prototype`을 의미하는데, 이를 통해서 인스턴스(객체)가 어떤 prototype을 공유하고 있는지, 상속 여부를 알 수 있다.
 
