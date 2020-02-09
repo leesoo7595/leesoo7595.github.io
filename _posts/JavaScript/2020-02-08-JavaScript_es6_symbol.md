@@ -100,3 +100,8 @@ const unsharedSymbol = Symbol('myKey');
 const key2 = Symbol.keyFor(unsharedSymbol);
 console.log(key2); // undefined
 ```
+
+## 참고
+
+- [Symbol - poiemaweb](https://poiemaweb.com/es6-symbol)
+- [ecma262](https://tc39.es/ecma262/)
