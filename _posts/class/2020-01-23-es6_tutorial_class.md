@@ -84,3 +84,5 @@ comments: true
 * async await
 
 ## babel과 webpack
+
+* CRA 직접 설정해보기
