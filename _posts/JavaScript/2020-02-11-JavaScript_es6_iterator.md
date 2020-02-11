@@ -37,7 +37,7 @@ for (const p of obj) {
 
 배열, 문자열은 대표적인 이터러블이다. 이터러블은 리스트를 일반화시킨 객체이다. `for...of`가 시작되면, 다음 값이 필요할 때, `next()` 메소드를 이용하여 돌아간다. 여기서 `next()`의 반환값은 키밸류 형태의 객체여야 한다. 정확히는 `{done: Boolean, value: any}` 이런 형태가 이루어지는데, 여기서 key값이 `done=false` 일때는 value에 다음 값(any)이 저장되도록 한다. (순회가 계속 되도록 한다.)
 
-## Iterator와 Array-like
+## Iterable와 Array-like
 
 ES6부터 이터러블이라는 것이 나오면서 확실히 순회가능한 종류들을 `Symbol.iterator` 메소드로 구분하지만, 사실 ES5 까지 계속 사용됐었던 유사 배열과 아주 비슷해보인다. 하지만 이 둘은 다르다.
 
@@ -67,7 +67,35 @@ let arr = Array.from(arrayLike); // (*)
 alert(arr.pop()); // World (메서드가 제대로 동작합니다.)
 ```
 
+## Iterator
+
+이터러블 프로토콜에는 `Iterable`과 `Iterator` 두 가지 형태가 존재한다. 우선 `Iterable`은 위에서 언급했듯이 객체 내부를 순회할 수 있는 객체라는 의미이다. 객체 내부적으로 `Symbol.iterator`를 확인하여 `for...of`를 이용해서 순회한다.
+
+```javascript
+const iterable = new Object();
+
+iterable[Symbol.iterator] = function* () {
+  yield 1;
+  yield 2;
+  yield 3;
+};
+
+console.log([...iterable]); // 1 2 3
+for(var value of iterable) {
+    console.log(value); // 1 2 3
+}
+```
+
+`Iterable`과 `Iterator`의 정확한 구분을 하자면, Iterable 객체는 내부적으로 `@@iterator` 프로퍼티를 포함하고 있다. 그리고 이 프로퍼티가 `Iterator`를 말하는 것으로, 이 프로퍼티는 `Iterator` 객체를 반환한다.. 그리고 Iterator라는 인터페이스는 내부적으로 `next`라는 프로퍼티를 포함하고 있다. `next`라는 아이는 `IteratorResult`라는 객체를 반환하는 함수이다.
+
+`next()`라는 프로퍼티는 정확히 `IteratorResult` 인터페이스를 따르는 객체를 리턴한다. 만약 이전 `next` 메소드가 호출됐다면 `IteratorResult` 객체가 반환되는데, 그 값이 위에서 말한 `{done: Boolean, value: any}` 이런 식으로 되어있는 객체이다. done=true 일때까지 순회한다.
+next() 메소드를 가지고 있고, 해당 역할까지 수행하는 인터페이스가 `Iterator`으로, `Iterable`만으로는 확연히 차이가 있다고 말할 수 있다.
+
+그리고 결국, 이 `Iterator`를 가지고 있는 인터페이스가 `Iterable`이 된다. 다시말하면, `[[Iterator]]`를 가지고 있는 객체일 것이다.
+
 ## 참고
 
 - [poiemaweb - iterator, for...of](https://poiemaweb.com/js-array)
 - [iterable](https://ko.javascript.info/iterable)
+- [Javascript와 Iterator](https://medium.com/@pks2974/javascript%EC%99%80-iterator-cdee90b11c0f)
+- [ecma262 - iterator](https://tc39.es/ecma262/)
