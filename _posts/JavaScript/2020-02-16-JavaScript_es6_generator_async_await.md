@@ -177,3 +177,8 @@ g.next();
 ```
 
 <img width="505" alt="Screen Shot 2020-02-16 at 6 14 12 PM" src="https://user-images.githubusercontent.com/39291812/74602058-2f096100-50e8-11ea-9243-6da9dd6bedd6.png">
+
+## 참고
+
+- [Generator: Async/await - Poiemaweb](https://poiemaweb.com/es6-generator)
+- [GeneratorFunction - mdn](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction)
