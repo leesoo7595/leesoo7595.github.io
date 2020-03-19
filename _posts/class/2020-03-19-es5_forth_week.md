@@ -22,7 +22,7 @@ console.dir(arr.__proto__);
 console.dir(obj.__proto__);
 ```
 
-<img width="975" alt="Screen Shot 2020-03-17 at 2 05 00 PM" src="https://user-images.githubusercontent.com/39291812/77021828-3b285d00-69cb-11ea-81fe-aaf4363d1d51.png">
+<img width="668" alt="Screen Shot 2020-03-19 at 10 18 54 AM" src="https://user-images.githubusercontent.com/39291812/77124609-b00c9d00-6a86-11ea-88a5-4a02a39b88a4.png">
 
 위 이미지는 일반 object와 array의 `__proto__`를 콘솔로 찍어 비교해본 이미지이다.
 
