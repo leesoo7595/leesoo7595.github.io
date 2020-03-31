@@ -10,7 +10,7 @@ comments: true
 
 Typescript에서 데코레이터란, 간단히 말해서 함수이다.
 
-## Class Component
+## Component
 
 ```javascript
 Vue.component('App', {
@@ -23,6 +23,34 @@ Vue.component('App', {
 ```javascript
 @Component
 export default class App extends Vue {}
+
+@Component({
+    components: {
+        Home,
+    }
+})
+export default class App extends Vue {}
 ```
 
 위와 같은 방법으로 동일하게 컴포넌트 작성이 가능하다.
+
+반대로 상위 컴포넌트에서 특정 컴포넌트를 불러와서 사용할 때엔 위 코드의 두 번째 컴포넌트처럼 component 데코레이터 내부에서 불러올 컴포넌트를 선언해주면 된다.
+
+## Props
+
+```javascript
+Vue.component('child', {
+    props: ['message'],
+});
+```
+
+기존의 vue에서 props를 불러올 때 코드 작성은 위와 같다. 이는 마찬가지로 Props 데코레이터를 써서 똑같은 결과를 낼 수 있다.
+
+```javascript
+@Component
+export default class PropExample extends Vue {
+    @Prop() message: string;
+}
+```
+
+Prop 데코레이터를 사용하여 위와 같이 동일하게 작성할 수 있다.
