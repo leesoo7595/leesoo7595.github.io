@@ -116,3 +116,76 @@ export default class WatchEx extends Vue {
 ```
 
 타입스크립트의 데코레이터를 사용한 `@Watch` 사용방법은 다음과 같다. 데코레이터 `Watch`를 사용하면 파라미터로 해당 클래스(객체)의 변화를 감지할 프로퍼티 값을 넣는다. 그리고 그 다음에 함수를 입력하여 변화 감지시 취할 코드를 작성한다.
+
+## Emit
+
+자식에서 부모로 전달하는 이벤트 핸들러이다. 주로 자식이 필요할 때 이 핸들러를 트리거함으로써 부모와 소통을 할 수 있다.
+
+```javascript
+export default {
+    data() {
+        return {
+            count: 0
+        }
+    },
+    methods: {
+        addToCount(n) {
+            this.count += n;
+            this.$emit('add-to-count', n);
+        },
+        resetCount() {
+            this.count = 0;
+            this.$emit('reset');
+        },
+        returnValue() {
+            this.$emit('return-value', 10)
+        },
+        promise() {
+            const promise = new Promise(resolve => {
+                setTimeout(() => {
+                    resolve(20)
+                }, 0)
+            });
+
+            promise.then(value => {
+                this.$emit('promise', value);
+            });
+        }
+    }
+}
+```
+
+위와 같이 사용하는 방법은 타입스크립트를 사용하지 않은 평범한 뷰의 `emit` 이벤트 핸들러를 사용하는 방식이다. $emit을 사용함으로써 첫 번째 파라미터로는 부모가 실행할 메소드 이름을 받고, 두 번째 파라미터로는 부모에게 넘겨줄 값을 받는다.
+
+```javascript
+@Component
+export default class MyComponent extends Vue {
+    count = 0;
+
+    @Emit()
+    addToCount(n: number) {
+        this.count += n;
+    }
+
+    @Emit('reset')
+    resetCount() {
+        this.count = 0;
+    }
+
+    @Emit()
+    returnValue() {
+        return 10;
+    }
+
+    @Emit()
+    promise() {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(20);
+            }, 0);
+        })
+    }
+}
+```
+
+뷰에 타입스크립트를 사용하면, 부모의 핸들러 함수명과 동일한 함수명을 사용할 경우, 함수 위에 `@Emit` 데코레이터를 얹고 파라미터로 아무것도 전달하지 않아도 되지만, 부모의 핸들러 함수명과 `@Emit` 데코레이터를 사용하는 함수명과 매치가 되지 않으면 해당 데코레이터 파라미터로 부모의 핸들러 함수명을 넘겨주면 된다.
