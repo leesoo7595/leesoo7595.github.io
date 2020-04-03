@@ -189,3 +189,89 @@ export default class MyComponent extends Vue {
 ```
 
 뷰에 타입스크립트를 사용하면, 부모의 핸들러 함수명과 동일한 함수명을 사용할 경우, 함수 위에 `@Emit` 데코레이터를 얹고 파라미터로 아무것도 전달하지 않아도 되지만, 부모의 핸들러 함수명과 `@Emit` 데코레이터를 사용하는 함수명과 매치가 되지 않으면 해당 데코레이터 파라미터로 부모의 핸들러 함수명을 넘겨주면 된다.
+
+## Provide & Inject
+
+뷰에서 `inject`는 자식 컴포넌트에서 제공한 속성을 의미한다. `provide`는 자식 컴포넌트가 `inject`를 사용함으로써 제공할 수 있는 속성들을 의미한다.
+
+```javascript
+// parent component providing 'foo'
+var Provider = {
+  provide: {
+    foo: 'bar'
+  },
+  // ...
+}
+
+// child component injecting 'foo'
+var Child = {
+  inject: ['foo'],
+  created () {
+    console.log(this.foo) // => "bar"
+  }
+  // ...
+}
+```
+
+위의 코드는 뷰에서 `provide`와 `inject`를 사용할 때 쓰이는 메소드이다. 타입스크립트를 사용하여 작성하였을 때는 아래와 같이 사용한다.
+
+```javascript
+export default class MyComponent extends Vue {
+    @Provide() foo: string = 'bar';
+    @Inject() readonly foo!: string;
+}
+```
+
+`provide`와 `inject`는 기본적으로 프로퍼티 데코레이터의 종류 중 하나인데, 프로퍼티 데코레이터는 초기화를 하지 않으면 오류를 뱉는다. 이에 대한 해결책은 프로퍼티를 선언할 때 변수명 뒤에 optional하게 주거나, 반대로 `essential`하게 주면 오류가 사라진다. `optional`은 타입스크립트에서 ?를 붙이고, `essential`은 !를 붙인다. 
+
+## Model
+
+v-model 바인딩과 헷갈릴 수 있는 기능이다. v-model을 사용할 때 일어날 수 있는 충돌을 피하기 위한 옵션이다. 잘 사용하지 않으니 참고용으로만 알아둘 것!
+
+```javascript
+export default {
+    model: {
+        prop: 'checked',
+        event: 'change'
+    },
+    props: {
+        checked: {
+            type: Boolean
+        },
+    },
+}
+```
+
+model 컴포넌트를 사용하는 방법은 위와 같다. vue의 객체에 model을 키 값으로 객체에서 사용하는 식이다. 이 기능을 타입스크립트로 사용할 경우에는 다음과 같다.
+
+```javascript
+@Component
+export default class MyComponent extends Vue {
+    @Model('change', {type: Boolean}) readonly checked!: boolean
+}
+```
+
+model 바인딩을 해줄 프로퍼티의 이름을 Model 데코레이터의 첫 번째 파라미터에 넣어주고, 타입 지정 등은 두 번째 파라미터에 넣어주는 식으로 사용한다.
+
+## Mixin
+
+es6와 타입스크립트에는 다중상속을 가능하게 하는 `Mixin` 기능이 있다. 즉, 중복되는 공통 로직을 컴포넌트로 빼서 `Mixin`으로 사용하기 쉽게 활용할 수 있다.
+
+다음 로직을 보면, 보통 뷰에서는 객체 타입으로 구현을 하게되는데, 타입스크립트로 하게 될 경우 Vue라는 내부 컴포넌트를 상속받아 구현하는 것이 기본이 된다. 여기서 `Vue` 컴포넌트 대신 `Mixins`을 사용하여 `Mixins`의 인자에 공통된 로직을 컴포넌트로 만든 컴포넌트 명을 받아 다중상속을 하여 사용할 수 있다.
+
+```javascript
+@Component({
+    components: {
+        Toggle,
+    }
+})
+export default class Dropdown extends Mixins(Toggle) {
+    mounted() {
+        console.log(this);
+    }
+}
+```
+
+### Reference
+
+* [인프런 - Typescript_Vue](https://www.inflearn.com/course/Typescript_Vue)
