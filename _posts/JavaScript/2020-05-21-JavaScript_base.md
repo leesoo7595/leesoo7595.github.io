@@ -113,3 +113,36 @@ typeof alert // "function"  (3)
 사용자가 확인 또는 취소 버튼을 누를 때까지 메세지가 창에 보여진다. 확인 버튼은 true, 취소 버튼은 false를 반환한다.
 
 위 함수들은 모두 모달을 띄워주는데, 모달이 떠 있는 동안엔 브라우저의 동작이 일시정지된다. 사용자가 창을 닫기 전까지는 다른 동작을 할 수가 없다. 그리고 해당 모달창을 수정할 수 없다.
+
+### 형 변환
+
+자바스크립트에서 함수, 연산자에 전달되는 값은 자동으로 타입이 맞춰서 코드가 돌아간다. 이런 과정을 **형 변환** `type conversion` 이라고 한다. 자바스크립트가 암시적으로 형 변환을 해주는 경우도 있고, 개발자가 명시적으로 원하는 타입으로 변환해주는 경우도 있다.
+
+```javascript
+// 문자형 변환
+let value = true;
+alert(typeof value); // boolean
+
+value = String(value); // 변수 value엔 문자열 "true"가 저장된다.
+alert(typeof value); // string
+
+// 숫자형 변환
+alert( "6" / "2" );  
+// 3 숫자형으로 자동 변환 후 연산 수행
+let str = "123";
+alert(typeof str); // string
+
+let num = Number(str); // 문자열 "123"이 숫자 123으로 변환됩니다.
+
+alert(typeof num); // number
+
+// 불린형 변환
+alert( Boolean(1) ); // 숫자 1(true)
+alert( Boolean(0) ); // 숫자 0(false)
+
+alert( Boolean("hello") ); // 문자열(true)
+alert( Boolean("") ); // 빈 문자열(false)
+```
+
+<img width="753" alt="Screen Shot 2020-05-22 at 1 04 18 AM" src="https://user-images.githubusercontent.com/39291812/82579075-42850600-9bc8-11ea-989a-4592ee602031.png">
+
