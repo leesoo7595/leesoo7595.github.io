@@ -146,3 +146,183 @@ alert( Boolean("") ); // 빈 문자열(false)
 
 <img width="753" alt="Screen Shot 2020-05-22 at 1 04 18 AM" src="https://user-images.githubusercontent.com/39291812/82579075-42850600-9bc8-11ea-989a-4592ee602031.png">
 
+### 수학 연산자
+
+기본적인 자바스크립트 연산자를 제외하고, 이번 단원 공부하면서 새로 알게된 연산자 위주로 정리를 해보겠다.
+
+* 거듭제곱 연산자
+
+`**` (exponentiation operator) 연산자는 `a ** b`를 계산하는 경우, a를 b번 곱한 값이 반환된다.
+
+```javascript
+alert( 2 ** 2 ); // 4  (2 * 2)
+alert( 2 ** 3 ); // 8  (2 * 2 * 2)
+alert( 2 ** 4 ); // 16 (2 * 2 * 2 * 2)
+alert( 4 ** (1/2) ); // 2 (1/2 거듭제곱은 제곱근)
+alert( 8 ** (1/3) ); // 2 (1/3 거듭제곱은 세제곱근)
+```
+
+* 단항 덧셈 연산자
+
+```javascript
+// 숫자에는 변화가 없음
+let x = 1;
+alert( +x ); // 1
+
+let y = -2;
+alert( +y ); // -2
+
+// 숫자형이 아닌 피연산자는 숫자형으로 변화
+alert( +true ); // 1
+alert( +"" );   // 0
+```
+
+```javascript
+let apples = "2";
+let oranges = "3";
+
+alert( apples + oranges ); // 23, 이항 덧셈 연산자는 문자열을 연결
+// 이항 덧셈 연산자가 적용되기 전에, 두 피연산자는 숫자형으로 변화
+alert( +apples + +oranges ); // 5
+```
+
+여기서 특징은, 이항 덧셈 연산자보다 단항 덧셈 연산자가 연산자 우선순위로 인해 더 먼저 적용된다.
+
+* 증가/감소 연산자
+
+증가/감소 연산자는 숫자를 하나 늘리거나 줄일 때 자주 사용되는 연산자이다. 다만, 해당 연산자는 변수에만 사용할 수 있다. 
+
+```javascript
+// 후위형
+let counter = 1;
+let a = counter++; // (*) ++counter를 counter++로 바꿈
+
+alert(a); // 1
+// 후위형은 counter를 증가시키지만, 증가 전의 기존값을 반환한다.
+
+// 전위형
+let counter = 1;
+let a = ++counter; // (*)
+
+alert(a); // 2
+// 전위형은 counter를 증가시키고 새로운 값을 반환한다.
+```
+
+### null 병합 연산자 ??
+
+null 병합 연산자는 최신에 나온 스펙이다. 지원해주지 않는 브라우저에는 폴리필을 활용하여 사용하여야한다. null 병합 연산자인 `??`를 사용하면 피연산자 중 확정되어있는 변수를 찾을 수 있다.
+
+```javascript
+let firstName = null;
+let lastName = null;
+let nickName = "바이올렛";
+
+// null이나 undefined가 아닌 첫 번째 피연산자
+alert(firstName ?? lastName ?? nickName ?? "익명"); // 바이올렛
+```
+
+위의 예시로만 보면, `||` 와 `??`를 헷갈릴 수 있다. 
+
+```javascript
+height = height ?? 100;
+```
+
+위의 예시에서 `height` 값이 주어지지않았다면 100이 주어진다. 특정 값이 주어진 상태라면 해당 값을 그대로 가져간다.
+
+```javascript
+let height = 0;
+
+alert(height || 100); // 100
+alert(height ?? 100); // 0
+```
+
+위에서 보았듯이, 이것이 `||` 와 `??` 차이이다. `||`는 height 값이 0인 것을 `falsy` 취급하여 `null`, `undefined`를 할당한 것처럼 동일하게 작용한다. 하지만 `null` 병합 연산자는 `height` 값에 0이 주어지면 값을 가지고 있다고 판단하고 넘어간다. 정확히 `height`가 `null`이나 `undefined`일 경우에만 `100`을 할당한다.
+
+* null 병합 연산자의 우선순위는 7위로 상당히 낮다.
+
+그래서 복잡한 표현식에는 괄호 안에서 해당 연산자를 사용해주는 것이 좋다.
+
+```javascript
+let height = null;
+let width = null;
+
+// 괄호를 추가!
+let area = (height ?? 100) * (width ?? 50);
+
+alert(area); // 5000
+```
+
+위에서 괄호를 추가하지 않는다면 * 연산자가 우선순위가 더 높기 때문에 원치 않는 결과가 나오게 된다.
+
+* null 병합 연산자인 `??`는 안정성 관련 이슈로 인해  `||`, `&&`와 함께 사용하는 것이 금지되어있다. 그래서 에러가 발생하는데, 에러를 피하려면 괄호를 사용해주어야한다.
+
+```javascript
+let x = 1 && 2 ?? 3; // SyntaxError: Unexpected token '??'
+let x = (1 && 2) ?? 3; // 제대로 동작합니다.
+alert(x); // 2
+```
+
+### for 반복문
+
+for 반복문 중에 내가 헷갈리는 반복문 빠져나오기 부분만 정리해보겠다...
+
+* `break`
+
+```javascript
+let sum = 0;
+
+while (true) {
+  let value = +prompt("숫자를 입력하세요.", '');
+  if (!value) break; // (*)
+  sum += value;
+}
+alert( '합계: ' + sum );
+```
+
+위의 예시에서 `value`값이 `false`이면 while문을 빠져나오게 된다.
+
+* `continue`
+
+`continue` 지시자는 전체 반복문을 멈추지 않지만, 현재 실행중인 이터레이션을 멈추고 다음 이터레이션으로 넘어가도록 한다. 즉, 현재 이터레이션을 끝까지 돌지 않고 다음 이터레이션으로 패스시킬 때 사용한다.
+
+```javascript
+for (let i = 0; i < 10; i++) {
+
+  // 조건이 참이라면 남아있는 본문은 실행되지 않습니다.
+  if (i % 2 == 0) continue;
+
+  alert(i); // 1, 3, 5, 7, 9가 차례대로 출력됨
+}
+```
+
+* 삼항 연산자에는 `break`나 `continue`가 올 수 없다.
+
+* 여러 개의 중첩 for문을 한꺼번에 나와야하는 경우, 레이블이라는 식별자를 사용하면 된다.
+
+```javascript
+labelName: for (...) {
+  ...
+}
+```
+
+반복문 안에서 `break <labelName>`문을 사용하면 레이블에 해당하는 반복문을 빠져나올 수 있다.
+
+```javascript
+outer: for (let i = 0; i < 3; i++) {
+
+  for (let j = 0; j < 3; j++) {
+
+    let input = prompt(`(${i},${j})의 값`, '');
+
+    // 사용자가 아무것도 입력하지 않거나 Cancel 버튼을 누르면 두 반복문 모두를 빠져나옵니다.
+    if (!input) break outer; // (*)
+
+    // 입력받은 값을 가지고 무언가를 함
+  }
+}
+alert('완료!');
+```
+
+## Reference
+
+- [자바스크립트 기초](https://ko.javascript.info/first-steps)
