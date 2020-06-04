@@ -16,7 +16,8 @@ type: about
 ----
 ### 2020
 - 2020.02 자바스크립트 스터디 완료
-- 2020.02~ YAPP 동아리 16기 프론트엔드 활동
+- 2020.02~ 2020.06 YAPP 동아리 16기 프론트엔드 활동
+    - Urlink 프로젝트: Reactjs & Chrome Extension 활용한 url 관리 웹 ([github](https://github.com/YAPP-16th/Team_Web_1_Client))
 - 2020.01 핀투비 입사 (Vuejs, Nodejs 프로젝트)
 
 ### 2019
