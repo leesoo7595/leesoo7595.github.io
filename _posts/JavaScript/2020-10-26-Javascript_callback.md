@@ -106,3 +106,220 @@ let promise = new Promise(function(resolve, reject) {
   - undefined
   - value (resolve)
   - error (reject)
+
+### Promise는 성공 또는 실패만 한다.
+
+실행 함수의 결과(성공, 실패)가 호출된 이후에는 다시 콜백을 호출해도 무시된다. 또한 결과를 주는 콜백은 인수를 하나까지만 받을 수 있다. 그 외 인수들은 무시된다.
+
+```javascript
+let promise = new Promise(function(resolve, reject) {
+  resolve("done");
+
+  reject(new Error("…")); // 무시됨
+  setTimeout(() => resolve("…")); // 무시됨
+});
+```
+
+### 실행 함수가 실패했을 때, Error 객체를 사용할 것
+
+실행 함수가 실패하여 `reject` 콜백을 호출할 수 있는데, 해당 콜백을 호출할 때 `Error` 객체를 사용하여야 한다.
+
+## then, catch, finally
+
+promise 객체는 결과나 에러를 받을 
+
+## 프로미스 체이닝
+
+프로미스를 사용하면 콜백 지옥을 해결할 수 있다.
+
+```javascript
+new Promise(function(resolve, reject) {
+
+  setTimeout(() => resolve(1), 1000); // (*)
+
+}).then(function(result) { // (**)
+
+  alert(result); // 1
+  return result * 2;
+
+}).then(function(result) { // (***)
+
+  alert(result); // 2
+  return result * 2;
+
+}).then(function(result) {
+
+  alert(result); // 4
+  return result * 2;
+
+});
+```
+
+`promise.then`을 호출하면 프로미스가 반환된다. 프로미스 체이닝이란, 결과값이 `then` 핸들러의 체인을 통해 전달된다는 부분에서 나온 단어이다.
+
+프로미스 체이닝을 활용하는 방법은, 프로미스의 결과값에 따라 그 후 결과값에 어떤 행위를 할 것인지에 따라 `then` 핸들러에 전달해주는 것이다. 그렇게 지속적으로 바뀌는 결과값을 `then` 핸들러로 활용할 수 있다.
+
+
+1번 
+
+```javascript
+function job() {
+    return new Promise(function(resolve, reject) {
+        reject();
+    });
+}
+
+let promise = job();
+
+promise
+
+.then(function() {
+    console.log('Success 1');
+})
+
+.then(function() {
+    console.log('Success 2');
+})
+
+.then(function() {
+    console.log('Success 3');
+})
+
+.catch(function() {
+    console.log('Error 1');
+})
+
+.then(function() {
+    console.log('Success 4');
+});
+```
+
+2번
+
+```javascript
+function job(state) {
+    return new Promise(function(resolve, reject) {
+        if (state) {
+            resolve('success');
+        } else {
+            reject('error');
+        }
+    });
+}
+
+let promise = job(true);
+
+promise
+
+.then(function(data) {
+    console.log(data);
+
+    return job(false);
+})
+
+.catch(function(error) {
+    console.log(error);
+
+    return 'Error caught';
+})
+
+.then(function(data) {
+    console.log(data);
+
+    return job(true);
+})
+
+.catch(function(error) {
+    console.log(error);
+});
+```
+
+3번
+
+```javascript
+function job(state) {
+    return new Promise(function(resolve, reject) {
+        if (state) {
+            resolve('success');
+        } else {
+            reject('error');
+        }
+    });
+}
+
+let promise = job(true);
+
+promise
+
+.then(function(data) {
+    console.log(data);
+
+    return job(true);
+})
+
+.then(function(data) {
+    if (data !== 'victory') {
+        throw 'Defeat';
+    }
+
+    return job(true);
+})
+
+.then(function(data) {
+    console.log(data);
+})
+
+.catch(function(error) {
+    console.log(error);
+
+    return job(false);
+})
+
+.then(function(data) {
+    console.log(data);
+
+    return job(true);
+})
+
+.catch(function(error) {
+    console.log(error);
+
+    return 'Error caught';
+})
+
+.then(function(data) {
+    console.log(data);
+
+    return new Error('test');
+})
+
+.then(function(data) {
+    console.log('Success:', data.message);
+})
+
+.catch(function(data) {
+    console.log('Error:', data.message);
+});
+```
+
+4번
+
+```javascript
+var p = new Promise((resolve, reject) => {
+  return Promise.reject(Error('The Fails!'))
+})
+p.catch(error => console.log(error.message))
+p.catch(error => console.log(error.message))
+
+var p = new Promise((resolve, reject) => {
+    reject(Error('The Fails!'))
+  })
+  .catch(error => console.log(error))
+  .then(error => console.log(error))
+```
+
+## Reference
+
+* [프로미스 체이닝](https://ko.javascript.info/promise-chaining)
+* [it's quiz time](https://www.codingame.com/playgrounds/347/javascript-promises-mastering-the-asynchronous/its-quiz-time)
+* [javascript promises quize](https://danlevy.net/javascript-promises-quiz/)
