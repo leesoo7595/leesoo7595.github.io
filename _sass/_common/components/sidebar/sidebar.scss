@@ -6,14 +6,18 @@
 
   width: 0;
   z-index: $zindex-4;
-  // box-shadow: inset 0 2px 6px black;
-  background: #ecc6c5;
-  -webkit-transform: translateZ(0); // http://stackoverflow.com/questions/17079857/position-fixed-broken-in-chrome-with-flash-behind
+  box-shadow: inset 0 2px 6px black;
+  background: $green-dark;
+  -webkit-transform: translateZ(
+    0
+  ); // http://stackoverflow.com/questions/17079857/position-fixed-broken-in-chrome-with-flash-behind
 
   a {
-    color: #654c4c;
-    border-bottom-color: $black-light;
-    &:hover { color: $gainsboro; }
+    color: $gray-lighter;
+    border-bottom-color: $gray-lighter;
+    &:hover {
+      color: $gainsboro;
+    }
   }
 
   @include tablet() {
@@ -31,11 +35,11 @@
   text-align: center;
 }
 
-@import "sidebar-toggle";
-@import "sidebar-author";
-@import "site-state";
-@import "sidebar-feed-link";
-@import "sidebar-author-links";
-@import "sidebar-blogroll";
-@import "sidebar-nav";
-@import "sidebar-toc";
+@import 'sidebar-toggle';
+@import 'sidebar-author';
+@import 'site-state';
+@import 'sidebar-feed-link';
+@import 'sidebar-author-links';
+@import 'sidebar-blogroll';
+@import 'sidebar-nav';
+@import 'sidebar-toc';
