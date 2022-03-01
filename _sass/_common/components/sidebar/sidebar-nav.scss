@@ -11,19 +11,31 @@
   font-size: 14px;
   color: $sidebar-nav-color;
 
-  &:hover { color: $sidebar-nav-hover-color; }
+  &:hover {
+    color: $sidebar-nav-hover-color;
+  }
 }
 
-.page-post-detail .sidebar-nav-toc { padding: 0 5px; }
+.page-post-detail .sidebar-nav-toc {
+  padding: 0 5px;
+}
 
-.page-post-detail .sidebar-nav-overview { margin-left: 10px; }
+.page-post-detail .sidebar-nav-overview {
+  margin-left: 10px;
+}
 
 .sidebar-nav .sidebar-nav-active {
-  color: #254469;
-  border-bottom-color: #254469;
+  color: $gray-lighter;
+  border-bottom-color: $gray-lighter;
 
-  &:hover { color: #254469; }
+  &:hover {
+    color: $gray-lighter;
+  }
 }
 
-.sidebar-panel { display: none; }
-.sidebar-panel-active { display: block; }
+.sidebar-panel {
+  display: none;
+}
+.sidebar-panel-active {
+  display: block;
+}
