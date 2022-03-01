@@ -58,13 +58,13 @@
 }
 
 .post-toc .nav .active > a {
-  color: #654c4c;
-  border-bottom-color: #654c4c;
+  color: $grey-light;
+  border-bottom-color: $grey-light;
 }
 
 .post-toc .nav .active-current > a {
-  color: #654c4c;
+  color: $grey-light;
   &:hover {
-    color: #654c4c;
+    color: $grey-light;
   }
 }

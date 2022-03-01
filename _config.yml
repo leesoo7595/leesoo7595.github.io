@@ -4,9 +4,9 @@
 # ---------------------------------------------------------------
 
 # Site
-title: Leesoo's blog
+title: sueleesoossoo's devlog
 subtitle:
-description: Junior Backend Developer
+description: Junior Frontend Developer
 author: LEESOO
 # Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hans, zh-hk, zh-tw
 language: en
@@ -22,17 +22,27 @@ permalink: pretty
 paginate: 10
 #paginate_path: "/page:num/"
 #archive:
-  #paginate: 10
-  #paginate_path: "/page:num/"
+#paginate: 10
+#paginate_path: "/page:num/"
 #category:
-  #paginate: 10
-  #paginate_path: "/page:num/"
+#paginate: 10
+#paginate_path: "/page:num/"
 #tag:
-  #paginate: 10
-  #paginate_path: "/page:num/"
+#paginate: 10
+#paginate_path: "/page:num/"
 
 # Handling Reading
-exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md", "Gemfile", "Gemfile.lock", "README_en.md"]
+exclude:
+  [
+    '.rvmrc',
+    '.rbenv-version',
+    'README.md',
+    'Rakefile',
+    'changelog.md',
+    'Gemfile',
+    'Gemfile.lock',
+    'README_en.md',
+  ]
 
 # Separator
 #excerpt_separator: <!-- more -->
@@ -45,17 +55,16 @@ highlighter: rouge
 ## 'redcarpet' is unsupported on GitHub Pages now.
 markdown: kramdown
 kramdown:
-    input: GFM
+  input: GFM
 
 # Default Attributes
 ## Docs: https://jekyllrb.com/docs/configuration/#front-matter-defaults
 defaults:
-  -
-    scope:
-      path: ""
-      type: "posts"
+  - scope:
+      path: ''
+      type: 'posts'
     values:
-      layout: "post"
+      layout: 'post'
       comments: true
 
 # Atom feed
@@ -65,10 +74,10 @@ feed:
 # Plugins
 ## Docs: https://help.github.com/articles/configuring-jekyll-plugins/
 plugins:
-# jemoji conficts with toc in some no-ascii post
-# - jemoji
- - jekyll-sitemap
- - jekyll-feed
+  # jemoji conficts with toc in some no-ascii post
+  # - jemoji
+  - jekyll-sitemap
+  - jekyll-feed
 
 # ---------------------------------------------------------------
 # Site Information Settings
@@ -78,7 +87,7 @@ plugins:
 favicon:
 
 # Set default keywords (Use a comma to separate)
-keywords: "Jekyll, NexT"
+keywords: 'Jekyll, NexT'
 
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link.
@@ -124,7 +133,6 @@ menu:
   #sitemap: /sitemap.xml
   #commonweal: /404.html
 
-
 # Enable/Disable menu icons.
 # Icon Mapping:
 #   Map a menu item to a specific FontAwesome icon name.
@@ -142,9 +150,6 @@ menu_icons:
   sitemap: sitemap
   commonweal: heartbeat
 
-
-
-
 # ---------------------------------------------------------------
 # Scheme Settings
 # ---------------------------------------------------------------
@@ -153,7 +158,6 @@ menu_icons:
 scheme: Muse
 #scheme: Mist
 #scheme: Pisces
-
 
 # ---------------------------------------------------------------
 # Font Settings
@@ -201,21 +205,15 @@ font:
     family:
     size:
 
-
-
-
 # ---------------------------------------------------------------
 # Sidebar Settings
 # ---------------------------------------------------------------
-
 
 # Social Links
 # Key is the link label showing to end users.
 # Value is the target link (E.g. GitHub: https://github.com/iissnan)
 social:
   GitHub: https://github.com/leesoo7595
-
-
 
 # Social Links Icons
 # Icon Mapping:
@@ -230,11 +228,9 @@ social_icons:
   Twitter: twitter
   Weibo: weibo
 
-
 # Sidebar Avatar
 # in directory: /assets/images/avatar.gif
 #avatar:
-
 
 # Table Of Contents in the Sidebar
 toc:
@@ -246,13 +242,11 @@ toc:
   # If true, all words will placed on next lines if header width longer then sidebar width.
   wrap: false
 
-
 # Creative Commons 4.0 International License.
 # http://creativecommons.org/
 # Available: by | by-nc | by-nc-nd | by-nc-sa | by-nd | by-sa | zero
 #creative_commons: by-nc-sa
 #creative_commons:
-
 
 sidebar:
   # Sidebar Position, available value: left | right
@@ -279,14 +273,12 @@ sidebar:
   # Scroll percent label in b2t button
   scrollpercent: false
 
-
 # Blog rolls
 #links_title: Links
 #links_layout: block
 #links_layout: inline
 #links:
-  #Title: http://example.com/
-
+#Title: http://example.com/
 
 # ---------------------------------------------------------------
 # Post Settings
@@ -323,17 +315,15 @@ post_wordcount:
 
 # Wechat Subscriber
 #wechat_subscriber:
-  #enabled: true
-  #qcode: /path/to/your/wechatqcode ex. /uploads/wechat-qcode.jpg
-  #description: ex. subscribe to my blog by scanning my public wechat account
+#enabled: true
+#qcode: /path/to/your/wechatqcode ex. /uploads/wechat-qcode.jpg
+#description: ex. subscribe to my blog by scanning my public wechat account
 
 # Declare license on posts
 post_copyright:
   enable: false
   license: CC BY-NC-SA 3.0
   license_url: https://creativecommons.org/licenses/by-nc-sa/3.0/
-
-
 
 # ---------------------------------------------------------------
 # Misc Theme Settings
@@ -353,7 +343,6 @@ custom_logo:
 #    normal | night | night eighties | night blue | night bright
 # https://github.com/chriskempson/tomorrow-theme
 highlight_theme: normal
-
 
 # ---------------------------------------------------------------
 # Third Party Services Settings
@@ -457,41 +446,39 @@ duoshuo_info:
   user_id: 0
   #admin_nickname: Author
 
-
 # Facebook SDK Support.
 # https://github.com/iissnan/hexo-theme-next/pull/410
 facebook_sdk:
   enable: true
-  app_id:       #<app_id>
-  fb_admin:     #<user_id>
-  like_button:  #true
-  webmaster:    #true
+  app_id: #<app_id>
+  fb_admin: #<user_id>
+  like_button: #true
+  webmaster: #true
 
 # Facebook comments plugin
 # This plugin depends on Facebook SDK.
 # If facebook_sdk.enable is false, Facebook comments plugin is unavailable.
 facebook_comments_plugin:
   enable: true
-  num_of_posts: 10  # min posts num is 1
-  width: 100%       # default width is 550px
-  scheme: light     # default scheme is light (light or dark)
+  num_of_posts: 10 # min posts num is 1
+  width: 100% # default width is 550px
+  scheme: light # default scheme is light (light or dark)
 
 # VKontakte API Support.
 # To get your AppID visit https://vk.com/editapp?act=create
 vkontakte_api:
   enable: false
-  app_id:       #<app_id>
-  like:         true
-  comments:     true
+  app_id: #<app_id>
+  like: true
+  comments: true
   num_of_posts: 10
 
 # Star rating support to each article.
 # To get your ID visit https://widgetpack.com
 rating:
   enable: false
-  id:     #<app_id>
-  color:  fc6423
-
+  id: #<app_id>
+  color: fc6423
 
 # Show number of visitors to each article.
 # You can visit https://leancloud.cn get AppID and AppKey.
@@ -518,13 +505,11 @@ busuanzi_count:
   page_pv_header: <i class="fa fa-file-o"></i>
   page_pv_footer:
 
-
 # Tencent analytics ID
 # tencent_analytics:
 
 # Tencent MTA ID
 # tencent_mta:
-
 
 # Enable baidu push so that the blog will push the url to baidu automatically which is very helpful for SEO
 baidu_push: false
@@ -554,8 +539,7 @@ algolia_search:
   labels:
     input_placeholder: Search for Posts
     hits_empty: "We didn't find any results for the search: ${query}"
-    hits_stats: "${hits} results found in ${time} ms"
-
+    hits_stats: '${hits} results found in ${time} ms'
 
 # Local search
 local_search:
@@ -570,7 +554,6 @@ local_search:
 # Usage: {% exturl text url "title" %}
 # Alias: {% extlink text url "title" %}
 exturl: false
-
 
 #! ---------------------------------------------------------------
 #! DO NOT EDIT THE FOLLOWING SETTINGS
@@ -700,7 +683,6 @@ vendors:
   # Internal version: 3.3.0
   # https://github.com/ethantw/Han
   han:
-
 
 # Assets
 css: assets/css

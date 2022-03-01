@@ -10,7 +10,7 @@
 .site-author-name {
   margin: $site-author-name-margin;
   text-align: $site-author-name-align;
-  color: #654c4c;
+  color: $site-author-name-color;
   font-weight: $site-author-name-weight;
 }
 
@@ -18,5 +18,5 @@
   margin-top: $site-description-margin-top;
   text-align: $site-description-align;
   font-size: $site-description-font-size;
-  color: #654c4c;
+  color: $site-description-color;
 }
