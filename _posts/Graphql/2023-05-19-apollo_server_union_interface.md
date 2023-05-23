@@ -101,6 +101,39 @@ const resolvers = {
 
 `__resolveType` 함수가 유효한 타입의 이름이 아닌 값을 반환하는 경우는 Graphql error를 생성한다.
 
+### Interface
+
+인터페이스는 여러 객체 타입이 포함할 수 있는 field의 집합을 지정할 수 있다.
+
+만약 객체 타입이 인터페이스를 `implements`한다면, 필드에 해당하는 모든 인터페이스를 포함해야한다.
+
+```graphql
+interface Book {
+  title: String!
+  author: Author!
+}
+
+type Textbook implements Book {
+  title: String! # Must be present
+  author: Author! # Must be present
+  courses: [Course!]!
+}
+
+type Query {
+  books: [Book!]! # Textbook 타입 객체도 포함할 수 있다.
+}
+```
+
+하나의 field는 하나의 인터페이스(또는 하나의 인터페이스 리스트)를 리턴 타입으로 가질 수 있다. 인터페이스 타입으로 field 지정이 되는 경우, 해당 인터페이스를 가지고 있는 모든 객체 타입을 반환할 수 있다.
+
+### Querying an interface
+
+field 리턴 타입이 인터페이스인 경우, 클라이언트에서는 해당 field에서 인터페이스에 포함된 모든 하위 필드를 쿼리할 수 있다.
+
+### Resolving an interface
+
+인터페이스 또한 `__resolveType` 함수를 정의해야한다.
+
 ## Reference
 
 - [Apollo Server - schema : unions-interfaces](https://www.apollographql.com/docs/apollo-server/schema/unions-interfaces/)
