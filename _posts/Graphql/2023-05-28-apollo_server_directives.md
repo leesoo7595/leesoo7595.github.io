@@ -94,6 +94,32 @@ type Query {
 }
 ```
 
+직접 정의한 custom directives를 사용하여 스키마 동작을 변환한 후 apollo server에 제공하려면, `@graphql-tools` 라이브러리를 사용하는 것이 좋다.
+예시는 [여기 uppercase custom directives](https://github.com/apollographql/docs-examples/blob/main/apollo-server/v4/custom-directives/upper-case-directive/src/index.ts)를 참고하면 좋을듯.
+
+### In subgraphs
+
+federated graph에서 directives를 사용하기전에, 다음 사항을 고려하여야한다.
+
+- custom directives는 graph에 구성된 supergraphs schema에 포함되지 않는다. 복잡한 graphs는 모든 하위 directives를 제거한다. 주어진 subgraphs만 자신의 directives를 인식한다.
+- directives는 각각의 subgraphs에 특정해서 고유하기 때문에, 서로 다른 subgraphs가 동일한 directives이지만 내용이 다른 것으로 정의하는 것이 가능하다. Composition은 이러한 불일치에 대해서 경고나 에러를 주지 않는다.
+- multiple subgraphs가 특정 field를 resolve하는 경우, 각 subgraph들은 동일한 로직으로 그 field를 resolve하게 구현하여야한다. 그렇지 않으면 어떤 subgraph가 해당 field를 resolve하느냐에 따라 달라질 수 있다.
+
+apollo server에서는 subgraph 스키마의 custom directives에 대한 transform 함수를 정의할 수 있다. 실행 가능한 subgraph의 스키마에서 transform 함수를 적용하려면, 먼저 `buildSubgraphSchema`를 사용하여 우선 subgraph schema를 생성한다.
+
+그리고 결과를 ApolloServer 생성자에 직접 전달하는 대신 먼저 transform 함수를 적용한다. 모든 transform 함수를 적용한 후 하던대로 최종 subgraphs 스키마를 ApolloServer 생성자에 제공한다.
+
+```typescript
+let subgraphSchema = buildSubgraphSchema({ typeDefs, resolvers });
+// Transformer function for an @upper directive
+subgraphSchema = upperDirectiveTransformer(subgraphSchema, "upper");
+
+const server = new ApolloServer({
+  schema: subgraphSchema,
+  // ...other options...
+});
+```
+
 ## Reference
 
 - [Apollo Server - directives](https://www.apollographql.com/docs/apollo-server/schema/directives/)
