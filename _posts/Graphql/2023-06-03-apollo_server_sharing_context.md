@@ -109,3 +109,42 @@ context 함수는 `contextValue`라는 객체를 리턴한다. 그 객체를 통
 리졸버는 `contextValue` 인자를 수정해서는 안된다. 이 객체는 모든 resolvers에서 일관성이 있어야하고, 예상치못한 에러를 막을 수 있도록 보장되게 한다.
 
 resolvers는 세번째 인자를 통해 `contextValue` 객체를 공유한다.모든 리졸버는 contextValue에 접근함으로써 특정한 operation을 실행시킬 수 있다.
+
+### Plugins
+
+빌트인과 커스텀 플러그인은 request 라이프사이클 함수들을 통해서 `contextValue`에 접근할 수 있다.
+
+```typescript
+interface MyContext {
+  token: string;
+}
+
+const server = new ApolloServer<MyContext>({
+  typeDefs,
+  resolvers: {
+    Query: {
+      hello: (root, args, { token }) => {
+        return token;
+      },
+    },
+  },
+  plugins: [
+    {
+      async requestDidStart({ contextValue }) {
+        // token is properly inferred as a string
+        console.log(contextValue.token);
+      },
+    },
+  ],
+});
+
+const { url } = await startStandaloneServer(server, {
+  context: async ({ req, res }) => ({
+    token: await getTokenForRequest(req),
+  }),
+});
+```
+
+## Reference
+
+- [Apollo Server - context](https://www.apollographql.com/docs/apollo-server/data/context/)
