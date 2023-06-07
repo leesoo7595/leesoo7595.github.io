@@ -149,6 +149,214 @@ stacktrace가 생략되는 경우, 어플리케이션에서도 사용할 수 없
 
 `formatError` hook은 두 인자를 받는다. 하나는 JSON 객체로 포맷된 에러, 그리고 다른 하나는 GraphQLError로 래핑된 표준 에러이다.
 
+```typescript
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  formatError: (formattedError, error) => {
+    // Return a different error message
+    if (
+      formattedError.extensions.code ===
+      ApolloServerErrorCode.GRAPHQL_VALIDATION_FAILED
+    ) {
+      return {
+        ...formattedError,
+        message: "Your query doesn't match the schema. Try double-checking it!",
+      };
+    }
+
+    // Otherwise return the formatted error. This error can also
+    // be manipulated in other ways, as long as it's returned.
+    return formattedError;
+  },
+});
+```
+
+만약 일반 에러 인스턴스에 접근하고 싶다면 formatError의 두 번쨰 인자에 접근하면 된다.
+
+```typescript
+formatError: (formattedError, error) => {
+    if (error instanceof CustomDBError) {
+      // do something specific
+    }
+  },
+```
+
+resolver에서 에러를 던질때, `GraphQLError`로 처음에 던진 에러를 래핑한다. 이 `GraphQLError`는 깔끔하게 error를 포맷팅하고, `path`와 같은 에러가 일어난 곳을 알려주는 유용한 필드를 포함시켜준다.
+
+만약 `GraphQLError`로 감싸지지 않게 하고 기존에 던진 에러에 접근하려면 `unwrapResolverError`를 사용하면 된다. 이 함수는 resolver 에러 또는 그 외의 에러의 `GraphQLError` 래핑을 바꿀 수 있도록 해준다.
+
+```typescript
+new ApolloServer({
+  formatError: (formattedError, error) => {
+    // unwrapResolverError removes the outer GraphQLError wrapping from
+    // errors thrown in resolvers, enabling us to check the instance of
+    // the original error
+    if (unwrapResolverError(error) instanceof CustomDBError) {
+      return { message: "Internal server error" };
+    }
+  },
+});
+```
+
+`formatError`에서 반은 에러를 특정한 context에 맞게 조정하려면, `didEncounterErrors` 라이프사이클 이벤트를 사용하여 에러에 추가 프로펕티를 플러그인을 만들어서 조정할 수 있다.
+
+#### For Apollo Studio reporting
+
+Apollo Server 4의 새로운 기능: 오류 세부 정보는 기본적으로 추적에 포함되지 않습니다. 대신, 각 오류의 메시지는 <masked>로 대체되고, maskedBy 오류 확장은 다른 모든 확장을 대체합니다. maskedBy 확장자에는 마스킹을 수행한 플러그인의 이름(ApolloServerPluginUsageReporting 또는 ApolloServerPluginInlineTrace)이 포함됩니다.
+
+서버의 에러 비율을 분석하기 위해 Apollo Studio르르 사용할 수 있다. 기본적으로 operations은 studio에 traces를 보내지만, error details는 포함하지 않는다. 만약 에러정보를 보내고 싶다면, 모든 에러를 보낼 수도 있고, 특정 에러가 전송되기 전에 수정할 수도 있다.
+
+에러를 보내기 위해서는 아래처럼 할 수 있다.
+
+```typescript
+new ApolloServer({
+  // etc.
+  plugins: [
+    ApolloServerPluginUsageReporting({
+      // If you pass unmodified: true to the usage reporting
+      // plugin, Apollo Studio receives ALL error details
+      sendErrors: { unmodified: true },
+    }),
+  ],
+});
+```
+
+`sendErrors.transform` 옵션에 함수를 전달하게되면, 특정 에러를 기록하거나 수정할 수 있다.
+
+비밀번호가 틀려서 unauthenticated 에러가 났을 때, 에당 에러를 apollo studio에서 해당 에러를 피할 수 있도록 transform 함수를 정의할 수 있다.
+
+```typescript
+import { ApolloServer } from "@apollo/server";
+import { ApolloServerPluginUsageReporting } from "@apollo/server/plugin/usageReporting";
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  plugins: [
+    ApolloServerPluginUsageReporting({
+      sendErrors: {
+        transform: (err) => {
+          // Return `null` to avoid reporting `UNAUTHENTICATED` errors
+          if (err.extensions.code === "UNAUTHENTICATED") {
+            return null;
+          }
+
+          // All other errors will be reported.
+          return err;
+        },
+      },
+    }),
+  ],
+});
+```
+
+#### redacting information from an error message
+
+만약 개인 식별 정도가 에러 메세지에 있으면, transform 함수로 해당 정보를 apollo studio에 보내지 않도록 할 수 있다.
+
+```typescript
+import { GraphQLError } from "graphql";
+
+throw new GraphQLError(
+  "The x-api-key:12345 doesn't have sufficient privileges."
+);
+```
+
+```typescript
+import { ApolloServer } from "@apollo/server";
+import { ApolloServerPluginUsageReporting } from "@apollo/server/plugin/usageReporting";
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  plugins: [
+    ApolloServerPluginUsageReporting({
+      sendErrors: {
+        transform: (err) => {
+          // Make sure that a specific pattern is removed from all error messages.
+          err.message = err.message.replace(/x-api-key:[A-Z0-9-]+/, "REDACTED");
+          return err;
+        },
+      },
+    }),
+  ],
+});
+```
+
+위의 경우, apollo studio에서 에러는 아래와 같이 리포팅된다.
+
+```
+The REDACTED doesn't have sufficient privileges.
+```
+
+### Setting HTTP status code and headers
+
+GraphQL은 HTTP 동사 및 상태 코드를 통해 통신할 때 REST와 동일한 규칙을 사용하지 않는다. 에러 일관성을 위해 포함된 오류 코드, 또는 커스텀 에러를 사용하는 것이 좋다.
+
+아폴로 서버는 다양한 상황에서 HTTP 상태코드와 다르게 사용된다.
+
+- 아폴로 서버는 올바르게 시작되지않았거나 종료되지 않았다면, 500을 준다.
+- 스키마 관련해서 유효성을 검사할 수 없는 경우 400으로 응답한다.
+- 잘못된 HTTP 메서드로 요청했을 때는 405로 응답한다.
+- context 함수에서 에러가 발생하는 경우 500
+- 요청 처리하는 동안 에러 발생시 500
+- 그 외는 200을 준다. 기본적으로 서버가 operation을 수행할 수 있고, 실행이 완료되는 경우이다. (리졸버 관련 에러가 포함될 수 있다.)
+
+HTTP 상태코드 또는 응답 header를 커스텀하는 3가지의 방법이 있다. resolver, context 함수, 또는 Plugin을 사용하는 방법이다.
+
+operation가 실행될 때는 200을 전송하는 것을 권장한다. 그래서 리졸버를 통해 이 부분을 커스텀하는 것보다는 context 함수나 요청하기 전에 후킹되는 plugin을 사용하는 것이 좋다.
+
+리졸버에서 수정하는 방법은 아래와 같음
+
+```typescript
+import { GraphQLError } from "graphql";
+
+const resolvers = {
+  Query: {
+    someField() {
+      throw new GraphQLError("the error message", {
+        extensions: {
+          code: "SOMETHING_BAD_HAPPENED",
+          http: {
+            status: 404,
+            headers: new Map([
+              ["some-header", "it was bad"],
+              ["another-header", "seriously"],
+            ]),
+          },
+        },
+      });
+    },
+  },
+};
+```
+
+아래는 plugin을 사용하여 수정
+
+```typescript
+const setHttpPlugin = {
+  async requestDidStart() {
+    return {
+      async willSendResponse({ response }) {
+        response.http.headers.set("custom-header", "hello");
+        if (
+          response.body.kind === "single" &&
+          response.body.singleResult.errors?.[0]?.extensions?.code === "TEAPOT"
+        ) {
+          response.http.status = 418;
+        }
+      },
+    };
+  },
+};
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  plugins: [setHttpPlugin],
+});
+```
+
 ## Refernce
 
 - [Apollo Server - Errors](https://www.apollographql.com/docs/apollo-server/data/errors)
