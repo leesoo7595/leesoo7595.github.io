@@ -240,3 +240,29 @@ class PersonalizationAPI extends RESTDataSource {
   }
 }
 ```
+
+## Using with DataLoader
+
+DataLoader 유틸리티는 특정한 사용 케이스를 위해서 설계되었다: 저장된 데이터의 중복요청 제거와 배칭처리와 같은...
+
+이 기능은 메모화 캐시를 제공해서 GraphQL 요청 중 동일한 객체를 여러번 호출하지 않도록 한다. 또한 한 이벤트루프 틱에서 발생하는 요청들을 일괄적으로 처리하도록 조합한다.
+
+DataLoader는 의도된 사용사례에선 유용하지만, REST API에서 데이터 로드할때는 유용하지 않다. 왜냐면 DataLoader는 캐싱이아닌 배치를 주요 기능으로 하기 때문이다.
+
+REST API 위에 Graphql 계층화할 때, 아래와 같은 경우 리소스 캐시가 있는 것이 좋다.
+
+- 여러 GraphQL 요청을 하는 데이터를 저장
+- 여러 GraphQL 서버간 공유하는 경우
+- 표준 HTTP 캐시컨트롤 헤더를 사용하는 캐시관리기능 제공
+
+### Batching with REST APIs
+
+대부분의 REST APIs는 batching을 제공하지 않는다. 배치처리된 엔드포인트를 사용하면 캐싱이 위험해질 수 있다. -> 무슨뜻?
+
+배치요청으로 데이터를 가져올 때 받는 응답을 요청하는 리소스의 정확한 조합에 대한 것이다. 동일한 조합을 다시 요청하지 않으면 동일한 리소스에 대한 이후 요청은 캐시를 통해 제공되지 못한다.
+
+캐싱할 수 없는 요청으로 배치처리하는 것을 제한하는 것을 추천한다. 이런 경우, RESTDataSources 내부의 private 구현을 통해 DataLoader를 활용할 수 있다.
+
+## Reference
+
+- [Apollo Server - fetching Rest](https://www.apollographql.com/docs/apollo-server/data/Fetching-rest)
