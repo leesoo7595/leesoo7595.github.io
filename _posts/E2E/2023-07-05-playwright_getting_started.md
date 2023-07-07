@@ -146,3 +146,54 @@ await expect(page).toHaveTitle(/Playwright/);
 ### Test Isolation
 
 playwright 테스트는 test fixtures 개념을 기반으로 한다. Test fixtures는 각 테스트를 위한 환경을 설정하는데 사용되고, 테스트에 필요한 모든 것을 제공한다. Test fixtures는 테스트 간에 환경이 독립적으로 되어있다. fixtures를 사용하면, 일반적인 설정 대신 테스트의 의미에 따라 그룹화가 가능하다.
+
+자세한건 다음 포스팅에서..
+
+### Using Test Hooks
+
+다양한 test hooks를 사용할 수 있다. 예를 들면 `test.describe`를 사용해서 테스트 그룹을 선언하고, 각 테스트 전후에 실행되는 `test.beforeEach`나 `test.afterEach`를 선언할 수 있다. 반대로 모든 테스트 전후에 실행되는 beforeAll, afterAll도 있음
+
+## Test Generator
+
+playwright는 테스트를 즉시 생성할 수 있는 기능을 제공하고, 이를 통해 빠르게 테스트를 시작할 수 있게 해준다. 테스트하려는 웹사이드와 인터렉션할 수 있는 브라우저 창과 테스트를 기록, 복사, 삭제 등등이 가능한 playwright inspector 창이 열린다.
+
+-
+
+### Running Codegen
+
+```
+npx playwright codegen demo.playwright.dev/todomvc
+```
+
+codegen 명령어를 사용하여 test generator를 실행할 수 있으며, 옵셔널하게 URL을 입력할 수 있다.
+
+## Trace viewer
+
+playwright 트레이스 뷰어는 GUI 도구이다. 테스트의 각 동작을 앞뒤로 이동하여 동작 중 어떤 일이 발생했는지 시각적으로 확인할 수 있다.
+
+### Recording a Trace
+
+기본적으로 `playwright.config` 파일엔 `trace.zip` 파일을 생성하는 데에 필요한 구성이 포함되어있다. Traces는 `on-first-retry` 옵션으로 설정되어있는데, 이는 실패한 테스트의 첫 번째 재시도시 실행된다. 이 뜻은 traces는 실패한 테스트의 첫번째 재시도엔 기록되지만, 첫번째 실행이거나 두번째 재시도땐 그렇지 않다.
+
+```typescript
+import { defineConfig } from '@playwright/test';
+export default defineConfig({
+  retries: process.env.CI ? 2 : 0, // set to 2 when running on CI
+  ...
+  use: {
+    trace: 'on-first-retry', // record traces on first retry of each test
+  },
+});
+```
+
+trace를 기록하는데에 적용가능한 옵션들을 보려면 [여기](https://playwright.dev/docs/trace-viewer)를 보자
+
+로컬에서 디버깅 메서드를 사용해서 테스트가 디버깅이 가능하기에 traces는 일반적으로 CI 환경에서 실행된다. 그래도 만약 로컬에서 trace를 돌리고 싶다면 `--trace on` 옵션을 추가하면 된다.
+
+```
+npx playwright test --trace on
+```
+
+### Viewing the Trace
+
+각 작업을 클릭하거나 타임라인을 사용해서 마우스를 가져가면 테스트의 trace를 확인하고 작업 전후의 페이지 상태를 확인할 수 있다. 테스트의 각 단계에서 로그, 소스, 네트워크를 inspect할 수 있다. trace viewer는 DOM 스냅샷을 생성하므로 개발도구를 열거나 완전히 인터렉팅이 가능하다.
