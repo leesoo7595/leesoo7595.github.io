@@ -248,7 +248,7 @@ test("example test", async ({ slowFixture }) => {
 
 playwright는 여러 테스트 projects를 실행시킬 때 설정을 분리할 수 있도록 제공한다. `option` fixtures를 사용할 수 있는데, 이를 사용하여 환경 옵션을 선언적이고 타입 세이프한 옵션으로 구현할 수 있다.
 
-아래 예시는 defaultItem 이라는 옵션을 생성하여 todoPage fixture에서 사용하도록 하였다. 이 옵션은 configuration 파일에서 세팅하는 것이 좋고, `{option: true}`라는 튜플구문을 사용하여야한다.
+아래 예시는 defaultItem 이라는 옵션을 생성하여 todoPage fixture에서 사용하도록 하였다. 이 옵션은 예시가 이럴뿐 configuration 파일에서 세팅하여야하고, `{option: true}`라는 튜플구문을 사용하여야한다.
 
 ```typescript
 import { test as base } from "@playwright/test";
@@ -278,4 +278,24 @@ export const test = base.extend<MyOptions & MyFixtures>({
   },
 });
 export { expect } from "@playwright/test";
+```
+
+아래 처럼 config file에 선언되어야한다.
+
+```typescript
+import { defineConfig } from "@playwright/test";
+import { MyOptions } from "./my-test";
+
+export default defineConfig<MyOptions>({
+  projects: [
+    {
+      name: "shopping",
+      use: { defaultItem: "Buy milk" },
+    },
+    {
+      name: "wellbeing",
+      use: { defaultItem: "Exercise!" },
+    },
+  ],
+});
 ```
