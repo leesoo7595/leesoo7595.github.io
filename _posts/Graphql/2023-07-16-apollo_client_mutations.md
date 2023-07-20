@@ -262,4 +262,79 @@ function AddTodo() {
 
 useMutation 함수를 통해서 update 함수를 전달할 수 있다.
 
-update 함수에는 아폴로 클라이언트 캐시를 나타내는 cache 객체를 전달된다. 이 객체는 `readQuery/writeQuery`, `readFragment/writeFragment`, `modify`와 `evict` 같은 cache API에 접근할 수 있도록 한다. 이 메소드들은 그래프큐엘 동작을 실행할 때
+update 함수에는 아폴로 클라이언트 캐시를 나타내는 cache 객체를 전달된다. 이 객체는 `readQuery/writeQuery`, `readFragment/writeFragment`, `modify`와 `evict` 같은 cache API에 접근할 수 있도록 한다. 이 메소드들은 그래프큐엘 서버와 상호작용하는 것처럼 캐시에서 동작을 실행할 수 있다.
+
+제공하고 있는 캐시 함수를 알고 싶으면 [여기](https://www.apollographql.com/docs/react/caching/cache-interaction/)
+
+update 함수는 또한 mutation의 결과가 포함된 data 프로퍼티를 담은 객체도 전달된다. 이 값을 사용해서 `cache.writeQuery`, `cache.writeFragment`, `cache.modify`를 사용해서 캐시를 업데이트할 수 있다.
+
+mutation이 optimistic response를 지정하는 경우, update 함수는 optimistic 결과를 한번, mutation의 실제 리턴값이 올때 한번, 총 두번 호출된다.
+
+위 예제에서 `ADD_TODO` 뮤테이션이 실행될 때, update 함수가 실행되기전 새롭게 추가되어 리턴된 `addTodo` 객체가 자동으로 캐시에 저장된다. 그러나 `ROOT_QUERY.todos`의 캐시 리스트(`GET_TODOS` 쿼리를 보는)는 자동으로 업데이트되지 않는다. 이것은 `GET_TODOS` 쿼리가 새로운 Todo 객체에 대한 알림을 받지 못하기 때문이다.
+
+이걸 알려주려면, 우리는 modifier 함수를 실행시킴으로써 `cache.modify`를 사용하여 캐시에서 아이템을 직접 삽입하거나 삭제한다. 위 예제에서 우리는 `GET_TODOS`의 결과를 `ROOT_QUERY.todos` 캐시 배열에 저장되어있다는 것을 알고 있다. 그래서 우리는 `todos`라는 modifier 함수를 사용하여 Todo에 새롭게 추가된 아이를 캐시에 업데이트해줄 수 있다. `cache.writeFragment`로는 추가된 Todo에 대한 내부 참조를 얻어서 해당 참조를 ROOT_Query.todos의 배열에 추가한다.
+
+update 함수 내에서 캐시된 데이터를 변경하면 해당 데이터의 변경사항을 수신중인 쿼리에 자동으로 브로드캐스트된다. 그래서 애플리케이션의 UI가 캐시된 값을 반영하도록 업데이트된다.
+
+### Refetching after update
+
+update 함수는 클라이언트의 로컬 캐시에서 뮤테이션의 백엔드 수정을 복제하는 것을 시도한다. 이 캐시 수정사항들은 모든 액티브한 쿼리들에게 알려주고, UI가 자동으로 업데이트된다. 만약 `update` 함수가 올바르게 동작하면 사용자는 다른 네트워크가 돌아가는 것을 기다릴 필요없이 최신 데이터를 즉시 보게된다.
+
+그러나 `update` 함수는 캐시된 값을 잘못 설정하여 이 복제를 잘못할 수 있다. 영향을 받는 액티브한 쿼리를 다시 가져와서 `update` 함수의 수정 사항을 더블체크할 수 있다. 그렇게 하려면, `onQueryUpdated` 콜백함수를 mutation 함수 내에서 사용한다.
+
+```typescript
+addTodo({
+  variables: { type: input.value },
+  update(cache, result) {
+    // Update the cache as an approximation of server-side mutation effects
+  },
+  onQueryUpdated(observableQuery) {
+    // Define any custom logic for determining whether to refetch
+    if (shouldRefetchQuery(observableQuery)) {
+      return observableQuery.refetch();
+    }
+  },
+});
+```
+
+update 함수가 실행된 후, 아폴로 클라이언트는 `onQueryUpdated`를 해당 업데이트되어 캐시된 필드를 가진 각 활동 쿼리에서 한번씩 호출한다. `onQueryUpdated`를 사용하면 커스텀 로직을 선언해서 관련 쿼리 refetch 여부를 결정할 수 있다.
+
+`onQueryUpdated`를 사용하여 쿼리를 refetch하려면, 위처럼 `observableQuery.refetch()`를 반환한다. 아니면 아무런 값도 요구되지않는다. refetch된 쿼리의 응답이 update 함수의 수정사항과 다른 경우, 캐시와 UI가 모두 자동으로 업데이트된다. 아니면 사용자에게 변경사항이 표시되지 않는다.
+
+가끔, 관련된 모든 쿼리를 수정하는 update 함수를 호출하는게 어려울 것이다. 모든 뮤테이션들이 update 함수를 통해 효율적으로 수정하여 적절한 정보를 리턴하진 않는다. 특정 쿼리가 반드시 포함되도록 하려면, onQueryUpdated와 refetchQueries를 같이 사용한다.
+
+```typescript
+addTodo({
+  variables: { type: input.value },
+  update(cache, result) {
+    // Update the cache as an approximation of server-side mutation effects.
+  },
+  // Force ReallyImportantQuery to be passed to onQueryUpdated.
+  refetchQueries: ["ReallyImportantQuery"],
+  onQueryUpdated(observableQuery) {
+    // If ReallyImportantQuery is active, it will be passed to onQueryUpdated.
+    // If no query with that name is active, a warning will be logged.
+  },
+});
+```
+
+업데이트 함수로 인해 ReallyImportantQuery가 이미 onQueryUpdated로 전달될 예정이었다면, 이 함수는 한 번만 전달된다. refetchQueries를 사용하면 해당 쿼리가 반드시 포함되도록 보장한다.
+
+예상했던 것보다 많은 쿼리가 포함되었다면, `ObservableQuery`를 검사해서 다시 가져올 필요가 없는지 확인 후 `onQueryUpdated`에서 false를 리턴하여 쿼리를 건너뛰거나 무시할 수 있다. `onQueryUpdated`에서 프로미스를 리턴하면 뮤테이션의 최종 값이 모든 프로미스를 대기하게 되어서 레거시인 `awaitRefetchQueries: true` 옵션이 필요가 없어진다.
+
+뮤테이션을 수행하지 않고 `onQueryUpdated` API를 사용하려면 `client.refetchQueries` 메서드를 사용할 수 있다. 독립실행형인 `client.refetchQueries` API에서 `refetchQueries` 뮤테이션 옵션은 `include:...`에서 호출되고, update 함수는 명확성을 위해 `updateCache`로 호출된다.
+아니면 같은 내부 시스템으로 `client.refetchQueries`와 뮤테이션 후 쿼리 리페칭을 모두 구동한다.
+
+## useMutation API
+
+### options
+
+- mutation
+- variables
+- errorPolicy
+- onCompleted
+- onError
+- onQueryUpdated
+- refetchQueries
+- awaitRefetchQueries
+- ignoreResults
