@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "네트워크 - "
+title: "네트워크 - OSI 4 계층 (물리, 데이터링크, 네트워크, 전송)"
 date: 2023-06-30
 tags: [Network]
 comments: true
