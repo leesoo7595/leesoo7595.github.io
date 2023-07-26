@@ -6,13 +6,15 @@ tags: [Graphql]
 comments: true
 ---
 
+이 글은 아폴로 [공식문서](https://www.apollographql.com/docs/react/data/refetching)를 읽고 정리한 글이다.
+
 # Refetching queries in Apollo Client
 
 아폴로 클라이언트는 캐시를 업데이트해서 GraphQL 데이터를 로컬로 수정할 수 있도록 해준다. 하지만 가끔은 서버에서 쿼리를 리페칭함으로써 클라이언트사이드의 GraphQL 데이터를 업데이트하는 것이 더 간단할 수 있다.
 
 이론적으로는 클라이언트에서 업데이트한 뒤에 모든 액티브 쿼리를 리패칭해야하지만, 쿼리를 선택적으로 리페칭하게되면 시간과 네트쿼으 대역폭을 절약할 수가 있다. `InMemoryCache`를 사용하면 최근 캐시 업데이트로 인해 무효화되었을 수 있는 액티브 쿼리를 확인할 수 있다.
 
-로컬 캐시 업데이트와 리패칭을 함께 사용하면 더욱 좋응ㄴ 조합이 된다: 어플리케이션에서 로컬 캐시 수정 결과를 즉시 표시하는 동시에, 백그라운드에서 리페칭하여 서버에서 최신 데이터를 가져올 수 있다. UI는 로컬 데이터와 리패치된 데이터의 차이점을 비교하여 리렌더링한다.
+로컬 캐시 업데이트와 리패칭을 함께 사용하면 더욱 좋은 조합이 된다: 어플리케이션에서 로컬 캐시 수정 결과를 즉시 표시하는 동시에, 백그라운드에서 리페칭하여 서버에서 최신 데이터를 가져올 수 있다. UI는 로컬 데이터와 리패치된 데이터의 차이점을 비교하여 리렌더링한다.
 
 리패칭은 특히 mutation 이후에 일반적으로 실행해서, mutate 함수는 리패치되어야하는 쿼리를 특정하고 어떻게 리패치할 것인지와 같은 `refetchQueries`와 `onQueryUpdated` 옵션을 받을 수 있다.
 
@@ -51,7 +53,7 @@ interface RefetchQueriesOptions<
 #### onQueryUpdated
 
 `options.updateCache`의 영향을 받거나 `options.include`에 리스트되어있는 `ObservableQuery`가 한번씩 호출되는 콜백함수이다.
-만약 `onQueryUpdated`가 제공되지 않으면 기본적으로 `observableQuery.refetch()`의 결과를 리턴한다. `onQueryUpdated`가 제공되면, 동적으로 각 쿼리가 리페치되어야하는지를 여부를 (또는 어떻게) 결정할 수 있다.
+만약 `onQueryUpdated`가 제공되지 않으면 기본적으로 `observableQuery.refetch()`(ObservableQuery가 리패칭된)의 결과를 리턴한다. `onQueryUpdated`가 제공되면, 동적으로 각 쿼리가(observableQuery 또는 include, updateCache에 명시된 쿼리) 리페치되어야하는지를 여부를 (또는 어떻게) 결정할 수 있다.
 `false`를 리턴하면 연관된 쿼리가 리패치되는 것을 막는다.
 
 #### optimistic
@@ -147,7 +149,7 @@ await client.refetchQueries({
       fields: {
         someRootField(value, { INVALIDATE }) {
           // Query.someRootField를 포함하는 쿼리를 업데이트한다.
-          // 캐시에서 해당 값을 변경하지 않고 업데이트한다.
+          // 실제로 캐시에서 해당 값을 변경하지 않고 업데이트한다.
           return INVALIDATE;
         },
       },
@@ -216,3 +218,87 @@ await client.refetchQueries({
   },
 });
 ```
+
+`ObservableQuery`가 충분한 정보로 제공되지 않는 경우에는, `ObservableQuery`의 두번째 인자로 전달된 `Cache.DiffResult` 객체를 사용해서 쿼리의 최신 결과와 쿼리의 완성 및 누락된 필드를 테스트할 수 있다.
+
+```typescript
+await client.refetchQueries({
+  updateCache(cache) {
+    cache.evict({ fieldName: "someRootField" });
+  },
+
+  onQueryUpdated(observableQuery, { complete, result, missing }) {
+    if (shouldIgnoreQuery(observableQuery)) {
+      return false;
+    }
+
+    if (complete) {
+      // 네트워크에서 무조건 리패치하는 것이 아닌 선택한 fetchPolicy에 따라 쿼리를 업데이트한다.
+      return observableQuery.reobserve();
+    }
+
+    // 네트워크에서 무조건 리패치한다.
+    return true;
+  },
+});
+```
+
+`onQueryUpdated`는 쿼리를 동적으로 필터할 수 있기 때문에, 위에서 언급했듯이 `include` 옵션을 사용해서 벌크로 사용하는 것도 잘 어울린다.
+
+```typescript
+await client.refetchQueries({
+  // 모든 액티브 쿼리를 디폴트로 포함시키는 옵션이다.
+  // onQueryUpdated를 사용하여 해당 쿼리를 필터링하는 것이 아니면 권장하지 않는다.
+  include: "active";
+
+  // 동적 필터링을 허용하여 모든 액티브 쿼리를 한번씩 호출한다.
+  onQueryUpdated(observableQuery) {
+    return !shouldIngoreQuery(observableQuery);
+  },
+});
+```
+
+#### Handling refetch errors
+
+위 예제에서 우리는 `await client.refetchQueries(...)`를 통해 모든 리패칭된 쿼리를 최종 `ApolloQueryResult<any>` 결과들로 알아낼 수 있다. 이 조합된 프로미스는 `Promise.all`로 만들어져서, 하나의 실패가 일어나면 모든 `Promise<TResolved[]>`를 rejects하여 다른 성공한 결과들을 숨길 수 있다. 이것이 문제가 된다면 `client.refetchQueries`에서 리턴해주는 `queries`와 `results` 배열을 사용할 수 있다.
+
+```typescript
+const { queries, results } = client.refetchQueries({
+  // ...
+});
+
+const finalResults = await Promise.all(
+  results.map((result, i) => {
+    return Promise.resolve(result).catch(error => {
+      console.error(`Error refetching query ${queries[i].queryName}: ${error}`);
+      return null; // 프로미스 reject가 일어난 경우 무시하도록 한다.
+    });
+  })
+});
+```
+
+미래에는, `client.refetchQueries` 메소드에 추가 입력 옵션이 추가될 수 있다. 결과 객체에 프로퍼티를 추가하여 프로미스 관련 프로퍼티와 `queries` 및 `results` 배열을 보완할 수 있을 것이다.
+
+만약 어떤 새로운 `client.refetchQueries` 입력 옵션 또는 결과 프로퍼티들이 유용할 것 같으면 언제든지 이슈를 개설하거나 사용 사례를 설명하는 토론을 시작해주세요.
+
+## Corresponding `client.mutate` options
+
+뮤테이션 이후 리패칭을 하려면, `client.refetchQueries`를 사용하는 것 대신 `client.mutate`에서 `client.refetchQueries`와 비슷한 옵션을 제공한다. 왜냐하면 뮤테이션이 진행하는 중 어떤 특정 시간에 리패칭이 실행되는 것이 중요하기 때문이다.
+
+역사적인 이유로, `client.mutate` 옵션은 새로운 `client.refetchQueries` 옵션과 조금 다르지만, 내부적인 구현은 충분히 동일하다. 다음과 같은 옵션을 보고 해석하여 사용할 수 있다.
+
+#### options.refetchQueries
+
+`client.refetchQueries`의 `options.include`와 같이 구현
+
+#### options.update
+
+`client.refetchQueries`의 `options.updateCache`와 같이 구현
+
+#### options.onQueryUpdated
+
+`client.refetchQueries`의 `options.onQueryUpdated`와 같이 구현
+
+#### options.awaitRefetchQueries
+
+`client.refetchQueries`의 `options.onQueryUpdated`가 프로미스로 리턴됨
