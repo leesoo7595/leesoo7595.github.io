@@ -100,7 +100,7 @@ await client.refetchQueries({
 
 #### Refetching all queries
 
-액티브 쿼리를 모두 리패치하려면 `'active'`를 전달한다. 아폴로클라이언트에서 관리하는 모든 쿼리를 리패치하려면 (심지어 observers도 없고, 어떤 마운트되지 않은 컴포넌트의 쿼리여도) `'all'`을 전달한다.
+액티브 쿼리를 모두 리패치하려면 `'active'`를 전달한다. 아폴로클라이언트에서 관리하는 모든 쿼리를 리패치하려면 (심지어 observers도 없고, 어떤 언마운트된 컴포넌트의 쿼리여도) `'all'`을 전달한다.
 
 ```typescript
 await client.refetchQueries({
@@ -127,15 +127,18 @@ await client.refetchQueries({
 이렇게 하게되면, `Query.someRootField`에 종속되어있는 모든 쿼리를 리패치한다. 어떤 쿼리가 포함되어있는지 미리 알 필요가 없다.
 `updateCache` 안에서는 모든 캐시 operations의 조합이 허용된다. (`writeQuery`, `writeFragment`, `modify`, `evict`...)
 
-`updateCache`에 의해 수행된 업데이트는 기본적으로 캐시에 유지된다. `client.refetchQueries`가 관찰을 완료한 후 캐시를 변경하지 않고 즉시 삭제하는 기능을 사용하고 싶다면 temporary optimistic layer에서 대신 수행할 수 있다.
+`updateCache`에 의해 수행된 업데이트에 대한 변경사항은 기본적으로 캐시에 반영된다. `client.refetchQueries`가 관찰을 완료한 후 캐시를 변경하지 않고 즉시 삭제하는 기능을 사용하고 싶다면 temporary optimistic layer에서 수행할 수 있다.
 
 ```typescript
 await client.refetchQueries({
   updateCache(cache) {
+    // 관련된 쿼리들을 리패치하게 해주는 함수
+    // 여기서 리패치되어 결과를 받지만...
     cache.evict({ fieldName: "someRootField" });
   },
 
   // 아래처럼 설정함으로써 Query.someRootField가 temporary optimistic layer에서만 evict한다.
+  // 리패치해서 받는 결과가 실제 캐시에는 반영되지 않음 (기존 캐시로 반영..?)
   optimistic: true,
 });
 ```
@@ -158,7 +161,7 @@ await client.refetchQueries({
 });
 ```
 
-`client.refetchQueries`가 소개되기 전에는, `INVALIDATE` 센티넬이 그렇게 유용하지 않았다. 왜냐하면 `fetchPolicy: "cache-first"`를 가지고 있는(캐시 우선인) 무효화된(유효하지 않은?) 쿼리들은 일반적으로 변경되지 않은 결과를 다시 읽어와서 네트워크 요청을 수행하지 않도록한다. `client.refetchQueries` 메소드는 애플리케이션 코드에서 이 무효화 시스템을 더욱 쉽게 접근할 수 있어 무효화된 쿼리의 리패치 동작을 제어할 수 있다...
+`client.refetchQueries`가 소개되기 전에는, `INVALIDATE` 센티넬이 그렇게 유용하지 않았다. 왜냐하면 `fetchPolicy: "cache-first"`를 가지고 있는(캐시 우선인) 무효화된(유효하지 않은?) 쿼리들은 일반적으로 변경되지 않은 결과를 다시 읽어와서 네트워크 요청을 수행하지 않도록한다. `client.refetchQueries` 메소드는 애플리케이션 코드에서 이 무효화 시스템을 더욱 쉽게 접근할 수 있어 무효화된 쿼리의 리패치 동작을 제어할 수 있다...(INVALIDATE된 애들로 인해서 쉽게 리패치 동작을 제어할 수 있게 되어 유용해졌다고 말하는 듯. cache-first일 때 무효화된 데이터들이 있으니 네트워크 요청은 날리지 않을 것.. 계속 무효화된 캐시를 바라볼 것이라ㅡ 결국 리패치를 활용해서 업데이트된 데이터를 바라보게 되기 때문에)
 
 위 모든 예제에서 `include`나, `updateCache`를 사용하는 것과는 상관없이 `client.refetchQueries`는 네트워크에서 영향을 받는 쿼리를 리패치하고, 그 결과인 `Promise<ApolloQueryResult<any>>`를 `Promise<TResolved[]>`에 포함시켜 리턴한다.
 
