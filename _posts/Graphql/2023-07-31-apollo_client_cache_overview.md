@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Apollo Client - Cache Overview"
-date: 2023-07-31
+date: 2023-08-02
 tags: [Graphql]
 comments: true
 ---
