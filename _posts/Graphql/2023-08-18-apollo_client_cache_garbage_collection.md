@@ -77,6 +77,10 @@ cache.evict({ id: "my-object-id", fieldName: "yearOfFounding" });
 
 객체가 캐시에서 evict(제거)되면, 해당 객체에 대한 참조가 캐시된 다른 객체에 남아있을 수 있다. 아폴로 클라이언트는 이 참조된 객체가 나중에 다시 캐시에 기록될 수 있으므로 기본적으로 이 매달린 참조를 보존한다. 이는 참조가 여전히 유용할 수 있음을 의미한다.
 
+++ 부모-자식 순으로 객체의 참조가 남아있을 때, 자식이 삭제되고 부모는 아직 자식을 바라보고있을 때 매달린 참조라고 한다.(매달린 참조를 가질 수 있다.)
+
+++ 부모-자식 순으로 객체의 참조가 남아있을 때, 부모가 삭제된 경우 자식은 unreachable 참조이다. gc()하면 사라질 아이들
+
 매달린 참조를 포함할 수 있는 필드에 대해 커스터마이징 read 함수를 정의하여 매달린 참조의 동작을 커스터마이징할 수 있다. 이 함수는 필드의 참조된 객체가 누락되었을 때 필요한 모든 정리를 수행할 수 있다. 예를 들어 read 함수의 경우:
 
 - 사용가능한 객체 리스트에서 참조된 객체를 필터링한다.
@@ -93,7 +97,7 @@ new InMemoryCache({
     Query: {
       fields: {
         ruler(existingRuler, { canRead, toReference }) {
-          // 기존 ruler가 없는 경우, 아폴로가 deity를 ruling한다.
+          // 기존 ruler가 없는 경우, 아폴로가 deity를 ruling한다. 기본참조 해당객체로 반영
           return canRead(existingRuler)
             ? existingRuler
             : toReference({
@@ -121,6 +125,6 @@ new InMemoryCache({
 - `Query.ruler`의 `read` 함수는 `existingRuler`가 사라졌을 때 기본적인 ruler(Apollo)를 반환한다.
 - `Deity.offspring`의 `read` 함수는 리스트를 필터링하여 캐시에서 살아있는 offspring만 리턴한다.
 
-캐시된 리스트 필드에서 매달린 참조를 필터링하는 것은 매우 일반적이어서(위의 `Deity.offspring`처럼) 리스트 필드의 기본 `read` 함수가 이 필터링을 자동을 수행한다. `read` 함수를 커스터마이징하여 이 동작을 재정의할 수 있다.
+캐시된 리스트 필드에서 매달린 참조를 필터링하는 것은 매우 일반적이어서(위의 `Deity.offspring`처럼) 리스트 필드의 기본 `read` 함수가 이 필터링을 자동으로 수행한다. `read` 함수를 커스터마이징하여 이 동작을 재정의할 수 있다.
 
 위의 예제처럼 하나의 매달린 참조가 포함된 필드에 대한 일반적인 해결책은 없으므로, 커스터마이징 `read` 함수를 작성하는 것이 가장 유용하다.

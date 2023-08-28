@@ -26,9 +26,9 @@ const { loading, error, data } = useQuery(GET_DOGS, {
 
 AsyncStorage 또는 localStorage와 같은 스토리지에서 `InMemoryCache`를 유지 및 리하이드레이트할 수 있다. 그렇게 하기 위해서는 [apollo3-cache-persist](https://github.com/apollographql/apollo-cache-persist) 라이브러리를 사용해야한다. 이 라이브러리는 여러 storage providers와 함께 동작한다.
 
-시작하기 앞서, `persisCache`에 storage provider와 캐시를 전달한다. 기본적으로 캐시의 내용은 즉시 비동기식으로 복원되고, 구성 가능한 짧은 간격을 두고 캐시에 쓸 때마다 유지된다.
+시작하기 앞서, `persistCache`에 storage provider와 캐시를 전달한다. 기본적으로 캐시의 내용은 즉시 비동기식으로 복원되고, 구성 가능한 짧은 간격을 두고 캐시에 쓸 때마다 유지된다.
 
-> `persisCache` 메소드는 Promise를 리턴하는 비동기이다.
+> `persistCache` 메소드는 Promise를 리턴하는 비동기이다.
 
 ```javascript
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -45,7 +45,7 @@ persistCache({
 });
 ```
 
-더 고급사용법과 추가적인 설정 옵션을 위해서는 [apollo3-cache-persis README](https://github.com/apollographql/apollo-cache-persist)를 읽어보자.
+더 고급사용법과 추가적인 설정 옵션을 위해서는 [apollo3-cache-persist README](https://github.com/apollographql/apollo-cache-persist)를 읽어보자.
 
 ## 캐시 재설정
 
