@@ -50,7 +50,7 @@ function List() {
 
 > 각 쿼리 도큐먼트의 프래그먼트 대신, 아폴로 클라이언트의 `createFragmentRegistry` 메소드를 사용하여 `InMemoryCache` 안에 프래그먼트의 이름을 먼저 등록할 수 있다. 이것은 아폴로 클라이언트가 네트워크 요청이 가기전에 document에 등록된 프래그먼트에 대한 정의를 포함할 수 있다. 자세한 내용은 `createFragmentRegistry` 사용하기 보기
 
-`<Item>` 컴포넌트의 `useFragment`를 사용하여 `fragment` document, `fragmentName`과 `from`을 통한 객체 참조를 통해 각 아이템에 대한 live binding을 생성할 수 있다.
+`<Item>` 컴포넌트의 `useFragment`를 사용하여 `fragment` document를 제공해줌으로써 `fragmentName`과 `from`을 통한 객체 참조를 통해 각 아이템에 대한 live binding을 생성할 수 있다.
 
 ```javascript
 function Item(props: { id: number }) {
