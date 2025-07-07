@@ -57,3 +57,32 @@ React는 두개의 React Element Nodes 사이에 부모-자식 관계를 형성�
 React Shadow Tree가 완성되면, 렌더러는 React Element Tree의 commit 단계를 트리거한다.
 
 ### Phase 2. Commit
+
+commit 단계는 두 가지의 작업으로 구성된다: Layout Calculation과 Tree Promotion
+
+- Layout Calculation: 이 작업은 각각의 React Shadow Node의 사이즈와 position을 계산한다. RN에서는, Yoga를 실행시켜서 각 React Shadow Node의 layout을 계산하도록 한다. 이 실제 계산을 하기 위해서는 js의 React Element에 있던 각 React Shadow Node의 스타일을 요구한다. 또한 노드로 변환될때 차지할 수 있는 사용 공간을 결정하는 React Shadow Tree의 root에 대한 layout 제약도 요구된다. (이게 뭐지)
+- Tree Promotion (New Tree -> Next Tree): 이 작업은 새로운 React Shadow Tree를 마운트 될 다음 tree로 승격하는 작업이다. 이 프로모션(승격)은 새로운 React Shadow Tree가 모든 마운트되기 위한 정보와 React Element Tree의 최신 상태를 나타내고 있음을 가리킨다. 다음 트리의 마운트는 UI Thread의 다음 tick에서 일어난다.
+
+**Additional Details**
+
+- 이 작업들은 백그라운드의 스레드에서 비동기적으로 실행된다.
+- 대부분의 layout 계산은 전적으로 C++로 실행된다. 그러나 어떤 컴포넌트들의 layout 계산은 host platform(Text, TextInput)을 의존한다. 텍스트의 size와 position은 각 host platform에 따라 다르며 host platform 계층에서 계산해야한다. 이를 위해 yoga는 host platform에 정의된 함수를 호출하여 컴포넌트 레이아웃을 계산한다.
+
+### Phase 3. Mount
+
+mount 단계에서는 React Shadow Tree(layout 계산으로 인해 데이터가 포함된)를 화면에 렌더될 픽셀을 가지고 있는 Host View Tree로 변환하는 작업을 한다. 리마인드하면, React Element Tree는 이렇게 생겼다.
+
+```jsx
+<View>
+  <Text>Hello, World</Text>
+</View>
+```
+
+높은 수준에서 RN 렌더러는 각 React Shadow Node에 해당하는 Host View를 생성하고 이를 화면에 마운트한다. 위를 예로 들면, renderer는 <View>를 위한 android.view.ViewGroup 인스턴스를 생성하고 <Text>를 위한 android.widget.TextView을 생성한다. 그리고 Hello World를 채운다.
+iOS에서도 비슷하게 UIView를 생성하고 NSLayoutManager를 호출하여 text를 채운다. 각 host view는 React Shadow Node를 통한 props를 사용하여 설정하고, size, position을 각 계산된 layout 정보에 설정한다.
+
+자세하게는 mounting 단계에서는 3가지의 스텝으로 이루어진다:
+
+- Tree Diffing
+- Tree Promotion
+- View Mounting
